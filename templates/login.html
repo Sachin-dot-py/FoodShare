@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <title>FoodShare - Login</title>
+</head>
+<body>
+<form method="POST" action="/login">
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+    <p><input type="hidden" name="next" value="{{ request.args.get('next', '') }}"/></p>
+    <table border=0 cellspacing=10>
+        <tr>
+            <td>Email:</td>
+            <td><input type="email" name="email" required></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><input type="password" name="password" required></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="checkbox" name="keep_me_logged_in" checked> Keep me Logged In</td>
+        </tr>
+        <tr>
+            <td colspan="2"><button type="submit">Sign In</button></td>
+        </tr>
+        <tr>
+            <td><a href="{{ url_for('sign_up_page') }}">Sign Up</a></td>
+            <td><a href="{{ url_for('reset_password_page') }}">Reset your password</a></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

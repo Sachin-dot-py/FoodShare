@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="{{ url_for('static', filename='passvalidation.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='passvalidation.css') }}">
+    <title>FoodShare - Sign Up</title>
+</head>
+<body>
+<form method="POST" action="/sign_up" onsubmit="return validateForm();">
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+    <h3>All fields marked with an asterisk (<font color=red><sup>*</sup></font>) are required</h3>
+    <table border=0 cellspacing=10>
+        <tr>
+            <td><font color=red><sup>*</sup></font>First Name:</td>
+            <td><input type="text" name="fname" required></td>
+        </tr>
+        <tr>
+            <td><font color=red><sup>*</sup></font>Last Name:</td>
+            <td><input type="text" name="lname" required></td>
+        </tr>
+        <tr>
+            <td><font color=red><sup>*</sup></font>Email:</td>
+            <td><input type="email" name="email" required></td>
+        </tr>
+        <tr>
+            <td><font color=red><sup>*</sup></font>Password:</td>
+            <td><input type="password" name="password" required onkeyup="validatePassword(); checkMatchingPasswords();"></td>
+        </tr>
+        <tr id="passvalidation" hidden>
+            <td colspan="2">
+                <table border="0" cellspacing="10">
+                    <tr>
+                        <td colspan="2">A valid password must contain the following:</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>A special character</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>A number</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>A lowercase or uppercase letter</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>At least eight characters</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td><font color=red><sup>*</sup></font>Re-Enter Password:</td>
+            <td><input type="password" name="repassword" required onkeyup='checkMatchingPasswords();'> &nbsp;&nbsp;<span id="passmatchvalidate"></span></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="checkbox" name="keep_me_logged_in" checked> Keep me Logged In</td>
+        </tr>
+        <tr>
+            <td colspan="2"><button type="submit">Sign Up</button></td>
+        </tr>
+        <tr>
+            <td colspan="2">Already have an account? <a href="{{ url_for('loginpage') }}">Log in.</a></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodShare - Home</title>
+</head>
+<body>
+{% if logged_in %}
+<a href="{{  url_for('buyerdashboard') }}">Buyer Dashboard</a>
+<a href="{{  url_for('sellerdashboard') }}">Seller Dashboard</a>
+<a href="{{  url_for('changepassword') }}">Change Password</a> <!-- TODO Change to profile page later -->
+<a href="{{  url_for('logoutpage') }}">Logout</a>
+{% else %}
+<a href="{{  url_for('loginpage') }}">Login</a>
+{% endif %}
+</body>
+</html>
