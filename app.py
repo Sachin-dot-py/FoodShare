@@ -1,15 +1,17 @@
 # System imports:
+import os
 import time
 from functools import wraps
 
 # Third-party imports:
 from flask import Flask, request, render_template, session, redirect, url_for, abort, jsonify
+from werkzeug.utils import secure_filename
 
 # Local imports:
-from database import UserDB
+from database import UserDB, RestaurantsDB
 from utils import send_email, ORS
 from config import WEBSITE_BASE_URL, COMMS_EMAIL, SUPPORT_EMAIL, RESET_PASSWORD_TEMPLATE, RESET_PASSWORD_NOTIFICATION, \
-    WELCOME_TEMPLATE, CHANGE_PASS_NOTIF
+    WELCOME_TEMPLATE, CHANGE_PASS_NOTIF, UPLOADS_FOLDER, ALLOWED_FILE_EXTENSIONS
 from secret_config import FLASK_SECRET_KEY
 
 app = Flask(__name__)
@@ -92,8 +94,6 @@ def sign_up_page():
             send_email("Welcome to FoodShare", message, COMMS_EMAIL, [request.form['email']])
             # Sign the user in and redirect to the dashboard
             session['email'] = request.form['email']
-            if request.form['keep_me_logged_in']:
-                session.permanent = True
             return redirect(url_for("buyerdashboard"))  # TODO decide the landing page
 
     #  Sign up page is opened (GET request) or signup form submitted with existing account
@@ -172,16 +172,49 @@ def address_autocomplete():
         abort(400)
 
 
-@app.route("/dashboard/buyer", methods=['GET'])
+@app.route("/buyer/dashboard", methods=['GET'])
 @login_required
 def buyerdashboard():
     raise NotImplementedError()
 
 
-@app.route("/dashboard/seller", methods=['GET'])
+@app.route("/seller/setup", methods=['GET', 'POST'])
+@login_required
+def setup_restaurant():
+    rdb = RestaurantsDB()
+    if request.method == "GET":  # Opening the webpage
+        if rdb.get_restaurant(email=session['email']):  # User has set up their restaurant
+            return redirect(url_for("sellerdashboard"))
+        else:
+            return render_template("setup_restaurant.html", allowed_extensions=", ".join(ALLOWED_FILE_EXTENSIONS))
+    else:  # Submitting the form
+        file = request.files['coverpic']
+        if not file.filename.lower().endswith(ALLOWED_FILE_EXTENSIONS):
+            return render_template("setup_restaurant.html", allowed_extensions=", ".join(ALLOWED_FILE_EXTENSIONS)
+                                   , error="Invalid file extension. Please upload only image files.")
+        extension = "." + file.filename.split(".")[-1]
+        coverpic = secure_filename(request.form['name'] + extension)
+        path = os.path.join(os.getcwd(), UPLOADS_FOLDER, coverpic)
+        while coverpic == "" or os.path.exists(path):
+            coverpic = "1" + coverpic  # Keeps prepending "1" to the filename until it is unique/valid
+            path = os.path.join(os.getcwd(), UPLOADS_FOLDER, coverpic)
+        file.save(path)
+
+        api = ORS()
+        address = {'name': request.form['address'], 'coordinates': api.get_coordinates(request.form['address'])}
+
+        rdb.add_restaurant(session['email'], request.form['name'], address, coverpic)
+        return redirect(url_for("sellerdashboard"))
+
+
+@app.route("/seller/dashboard", methods=['GET'])
 @login_required
 def sellerdashboard():
-    raise NotImplementedError()
+    rdb = RestaurantsDB()
+    if restaurant := rdb.get_restaurant(email=session['email']):  # User has set up their restaurant
+        raise NotImplementedError()
+    else:
+        return redirect(url_for("setup_restaurant"))
 
 
 @app.route("/dashboard/admin", methods=['GET'])

@@ -1,3 +1,4 @@
 pymongo[srv]
 flask
+werkzeug
 requests

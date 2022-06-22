@@ -1,5 +1,8 @@
 WEBSITE_BASE_URL = "http://127.0.0.1:5000"  # To change in production
 
+ALLOWED_FILE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
+UPLOADS_FOLDER = "uploads"
+
 COMMS_EMAIL = "no-reply@FoodShare.xyz"
 SUPPORT_EMAIL = "support@FoodShare.xyz"
 

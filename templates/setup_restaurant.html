@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodShare - Setup Restaurant</title>
+</head>
+<body>
+<form method="POST" enctype="multipart/form-data" action="{{ url_for('setup_restaurant') }}">
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+    <h3>All fields are required.</h3>
+    <table border=0 cellspacing=10>
+        <tr>
+            <td>Name of Restaurant:</td>
+            <td><input type="text" name="name" required autofocus></td>
+        </tr>
+        <tr>
+            <td>Address:</td>
+            <td><input type="text" name="address" required></td>
+        </tr>
+        <tr>
+            <td>Cover Picture: (in {{ allowed_extensions }})</td>
+            <td><input type="file" name="coverpic" accept="{{ allowed_extensions }}" required> </td>
+        </tr>
+        <tr>
+            <td colspan="2"><button type="submit">Setup Restaurant</button></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

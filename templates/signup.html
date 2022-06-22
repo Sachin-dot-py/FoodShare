@@ -15,7 +15,7 @@
     <table border=0 cellspacing=10>
         <tr>
             <td><font color=red><sup>*</sup></font>First Name:</td>
-            <td><input type="text" name="fname" required></td>
+            <td><input type="text" name="fname" required autofocus></td>
         </tr>
         <tr>
             <td><font color=red><sup>*</sup></font>Last Name:</td>
@@ -67,9 +67,6 @@
         <tr>
             <td><font color=red><sup>*</sup></font>Re-Enter Password:</td>
             <td><input type="password" name="repassword" required onkeyup='checkMatchingPasswords();'> &nbsp;&nbsp;<span id="passmatchvalidate"></span></td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="checkbox" name="keep_me_logged_in" checked> Keep me Logged In</td>
         </tr>
         <tr>
             <td colspan="2"><button type="submit">Sign Up</button></td>
