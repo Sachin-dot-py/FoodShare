@@ -1,0 +1,23 @@
+.valid{
+    color: green;
+}
+
+.invalid{
+    color: red;
+}
+
+#address_autocomplete ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid gray;
+}
+
+#address_autocomplete ul li{
+    padding: 5px;
+    border-bottom: 1px solid gray;
+}
+
+#address_autocomplete ul li:hover{
+    background-color: gray;
+}

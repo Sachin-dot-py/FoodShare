@@ -1,11 +1,11 @@
-from flask import Flask, request, render_template, session, redirect, url_for, abort
+from flask import Flask, request, render_template, session, redirect, url_for, abort, jsonify
 import time
 from functools import wraps
 from database import UserDB
-from utils import send_email
+from utils import send_email, ORS
 from config import WEBSITE_BASE_URL, COMMS_EMAIL, SUPPORT_EMAIL, RESET_PASSWORD_TEMPLATE, RESET_PASSWORD_NOTIFICATION, \
     WELCOME_TEMPLATE, CHANGE_PASS_NOTIF
-from secret_config import FLASK_SECRET_KEY, DB_ACCESS_LINK
+from secret_config import FLASK_SECRET_KEY
 
 app = Flask(__name__)
 app.secret_key = FLASK_SECRET_KEY
@@ -25,7 +25,7 @@ def login_required(func):
 def admin_only(func):
     @wraps(func)
     def decorator(*args, **kwargs):
-        userdb = UserDB(DB_ACCESS_LINK)
+        userdb = UserDB()
         if not userdb.is_admin(session['email']):
             abort(403)
         return func(*args, **kwargs)
@@ -51,7 +51,7 @@ def homepage():
 def loginpage():
     error = None
     if request.method == 'POST':  # Login form has been submitted
-        db = UserDB(DB_ACCESS_LINK)
+        db = UserDB()
         if db.check_credentials(request.form['email'], request.form['password']):
             session['email'] = request.form['email']
             if request.form['keep_me_logged_in']:
@@ -74,12 +74,14 @@ def loginpage():
 def sign_up_page():
     error = None
     if request.method == "POST":
-        db = UserDB(DB_ACCESS_LINK)
+        db = UserDB()
         if db.get_user(request.form['email']):  # Check if the user already has an account.
             error = "An account with the given email address already exists. " \
                     "Please use a different email address or login to your existing account."
         else:  # Sign the user up
-            db.add_user(request.form['fname'], request.form['lname'], request.form['email'], request.form['password'])
+            api = ORS()
+            address = {'name': request.form['address'], 'coordinates': api.get_coordinates(request.form['address'])}
+            db.add_user(request.form['fname'], request.form['lname'], request.form['email'], address, request.form['password'])
             message = WELCOME_TEMPLATE.format(fname=request.form['fname'])
             send_email("Welcome to FoodShare", message, COMMS_EMAIL, [request.form['email']])
             # Sign the user in and redirect to the dashboard
@@ -97,7 +99,7 @@ def reset_password_page():
     if request.method == "GET":  # User opening the webpage
         return render_template("reset_password.html", stage=1)  # Render form with email address
     else:  # Submitting the form with the email address
-        db = UserDB(DB_ACCESS_LINK)
+        db = UserDB()
         user = db.get_user(request.form['email'])
         if not user:  # Invalid email address
             error = "The email address provided does not match any existing accounts." \
@@ -113,7 +115,7 @@ def reset_password_page():
 @app.route('/reset_password/<int:reset_id>', methods=["GET", "POST"])
 def reset_password(reset_id: int):
     if request.method == "GET":  # User opening the webpage from the email link
-        db = UserDB(DB_ACCESS_LINK)
+        db = UserDB()
         user = db.lookup_reset_id(reset_id)
         if not user:  # Invalid URL
             abort(400)
@@ -123,7 +125,7 @@ def reset_password(reset_id: int):
             return render_template("reset_password.html", stage=1, error=error)  # Redirect back to first stage
         return render_template("reset_password.html", stage=3, reset_id=reset_id, fname=user['fname'])  # Render form with email address
     else:  # Submitting the form with the email address
-        db = UserDB(DB_ACCESS_LINK)
+        db = UserDB()
         user = db.lookup_reset_id(reset_id)
         db.edit_user(user['email'], unhashed_password=request.form['password'])  # Change the password
         db.delete_reset_id(reset_id)
@@ -140,7 +142,7 @@ def changepassword():
     if request.method == "GET":  # User opening the webpage
         return render_template("reset_password.html", change_password=True)
     else:  # Form submitted
-        db = UserDB(DB_ACCESS_LINK)
+        db = UserDB()
         user = db.get_user(session['email'])
         db.edit_user(user['email'], unhashed_password=request.form['password'])
         message = CHANGE_PASS_NOTIF.format(fname=user['fname'], SUPPORT_EMAIL=SUPPORT_EMAIL)
@@ -152,6 +154,16 @@ def changepassword():
 def logoutpage():
     session.pop('email', None)
     return redirect(url_for('homepage'))
+
+
+@app.route('/autocomplete/address', methods=['GET'])
+def address_autocomplete():
+    # Check if the request is valid (i.e. the address parameter has been provided
+    if address := request.args.get("address", None):
+        api = ORS()
+        return jsonify(api.autocomplete_coordinates(address))
+    else:
+        abort(400)
 
 
 @app.route("/dashboard/buyer", methods=['GET'])

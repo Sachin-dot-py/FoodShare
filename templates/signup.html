@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="{{ url_for('static', filename='passvalidation.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='passvalidation.css') }}">
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <title>FoodShare - Sign Up</title>
 </head>
 <body>
@@ -26,8 +26,18 @@
             <td><input type="email" name="email" required></td>
         </tr>
         <tr>
+            <td><font color=red><sup>*</sup></font>Address:</td>
+            <td>
+                <input type="text" size="50" name="address" onkeyup="autocompleteAddress(this.value);" required>
+                <div id="address_autocomplete"><ul></ul></div>
+            </td>
+        </tr>
+        <tr>
             <td><font color=red><sup>*</sup></font>Password:</td>
-            <td><input type="password" name="password" required onkeyup="validatePassword(); checkMatchingPasswords();"></td>
+            <td>
+                <input type="password" name="password" required onkeyup="validatePassword(); checkMatchingPasswords();">
+                <input type="checkbox" name="showpassword" onclick="toggleShowPassword();"> Show Password
+            </td>
         </tr>
         <tr id="passvalidation" hidden>
             <td colspan="2">
@@ -45,7 +55,7 @@
                     </tr>
                     <tr>
                         <td></td>
-                        <td>A lowercase or uppercase letter</td>
+                        <td>An uppercase character</td>
                     </tr>
                     <tr>
                         <td></td>
