@@ -1,6 +1,11 @@
+# System imports:
 import os
 import hashlib
+
+# Third-party imports:
 import requests
+
+# Local imports:
 from secret_config import MAILGUN_API_KEY, MAILGUN_DOMAIN_NAME, ORS_API_KEY
 
 
@@ -35,14 +40,14 @@ class ORS:
         self.key = ORS_API_KEY
         self.base_link = "https://api.openrouteservice.org"
 
-    def perform_get_request(self, endpoint: str, params: dict):
+    def _perform_get_request(self, endpoint: str, params: dict):
         """ Internal function to perform a get request to the ORS API given the endpoint and parameters """
         return requests.get(
             self.base_link + endpoint,
             params={"api_key": self.key, **params}
         ).json()
 
-    def perform_post_request(self, endpoint: str, data: dict):
+    def _perform_post_request(self, endpoint: str, data: dict):
         """ Internal function to perform a post request to the ORS API given the endpoint and parameters """
         return requests.post(
             self.base_link + endpoint,
@@ -52,7 +57,7 @@ class ORS:
 
     def autocomplete_coordinates(self, address: str) -> dict[str, list[int, int]]:
         """ Returns a dictionary mapping name to coordinates of location results for a given address """
-        result = self.perform_get_request(
+        result = self._perform_get_request(
             "/geocode/autocomplete",
             params={
                 'text': address,
@@ -69,7 +74,7 @@ class ORS:
 
     def get_coordinates(self, address: str) -> list[int, int]:
         """ Returns coordinates (latitude and longitude) for a given address"""
-        result = self.perform_get_request(
+        result = self._perform_get_request(
             "/geocode/search",
             params={
                 'text': address,
@@ -82,7 +87,7 @@ class ORS:
 
     def distance_between(self, coord1: list[int, int], coord2: list[int, int]) -> int:
         """ Get the distance between two coordinates in metres as an integer"""
-        result = self.perform_post_request(
+        result = self._perform_post_request(
             "/v2/matrix/foot-walking",
             data={
                 'locations': [coord1, coord2],

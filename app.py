@@ -1,6 +1,11 @@
-from flask import Flask, request, render_template, session, redirect, url_for, abort, jsonify
+# System imports:
 import time
 from functools import wraps
+
+# Third-party imports:
+from flask import Flask, request, render_template, session, redirect, url_for, abort, jsonify
+
+# Local imports:
 from database import UserDB
 from utils import send_email, ORS
 from config import WEBSITE_BASE_URL, COMMS_EMAIL, SUPPORT_EMAIL, RESET_PASSWORD_TEMPLATE, RESET_PASSWORD_NOTIFICATION, \
@@ -9,6 +14,7 @@ from secret_config import FLASK_SECRET_KEY
 
 app = Flask(__name__)
 app.secret_key = FLASK_SECRET_KEY
+app.config['MAX_CONTENT_LENGTH'] = 8 * 1000 * 1000  # Limiting uploads to 8 megabytes
 
 
 # Decorator function for pages requiring a login
