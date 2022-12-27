@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Restaurant - FoodShare</title>
+</head>
+<body>
+<h2>Current Menu</h2>
+<!-- TODO Render Menu -->
+<h2>Add Items to Menu</h2>
+<form name="updatemenu" method="POST" action="/update_menu">
+    <select name="menu">
+        {% for item in restaurant.menu %}
+        <option value="{{ item.id }}">{{  }}</option>
+        {% endfor %}
+    </select>
+</form>
+<h2>Create a new Menu Item</h2>
+<form name="createitem" method="POST" action="/new_menu_item">
+Name of Item <input type="text" name="name">
+</form>
+</body>
+</html>

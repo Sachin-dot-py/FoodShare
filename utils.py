@@ -73,7 +73,7 @@ class ORS:
         return locations
 
     def get_coordinates(self, address: str) -> list[int, int]:
-        """ Returns coordinates (latitude and longitude) for a given address"""
+        """ Returns coordinates (longitude and latitude) for a given address"""
         result = self._perform_get_request(
             "/geocode/search",
             params={

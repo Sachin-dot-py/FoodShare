@@ -4,7 +4,7 @@ import time
 from functools import wraps
 
 # Third-party imports:
-from flask import Flask, request, render_template, session, redirect, url_for, abort, jsonify
+from flask import Flask, request, render_template, session, redirect, url_for, abort, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 
 # Local imports:
@@ -86,6 +86,7 @@ def sign_up_page():
         if db.get_user(request.form['email']):  # Check if the user already has an account.
             error = "An account with the given email address already exists. " \
                     "Please use a different email address or login to your existing account."
+            # TODO Server Side Validation
         else:  # Sign the user up
             api = ORS()
             address = {'name': request.form['address'], 'coordinates': api.get_coordinates(request.form['address'])}
@@ -172,10 +173,31 @@ def address_autocomplete():
         abort(400)
 
 
-@app.route("/buyer/dashboard", methods=['GET'])
+@app.route("/restaurants", methods=['GET'])
 @login_required
 def buyerdashboard():
-    raise NotImplementedError()
+    udb = UserDB()
+    user = udb.get_user(session['email'])
+    rdb = RestaurantsDB()
+    restaurants = rdb.get_all_restaurants()
+    api = ORS()
+    for restaurant in restaurants:
+        distance = api.distance_between(restaurant['address']['coordinates'], user['address']['coordinates'])
+        restaurant['distance'] = distance
+    return render_template("buyer_dashboard.html", restaurants=restaurants)
+
+
+@app.route("/restaurants/<string:restid>", methods=['GET'])
+@login_required
+def viewrestaurant(restid: str):
+    rdb = RestaurantsDB()
+    restaurant = rdb.view_restaurant(restid=restid)
+    udb = UserDB()
+    user = udb.get_user(session['email'])
+    api = ORS()
+    distance = api.distance_between(restaurant['address']['coordinates'], user['address']['coordinates'])
+    restaurant['distance'] = distance
+    return render_template("restaurant.html", restaurant=restaurant)
 
 
 @app.route("/seller/setup", methods=['GET', 'POST'])
@@ -217,11 +239,28 @@ def sellerdashboard():
         return redirect(url_for("setup_restaurant"))
 
 
-@app.route("/dashboard/admin", methods=['GET'])
+@app.route("/seller/updatemenu", methods=['GET'])
+@login_required
+def updatemenu():
+    rdb = RestaurantsDB()
+    if restaurant := rdb.get_restaurant(email=session['email']):  # User has set up their restaurant
+        menu = restaurant['menu']
+        raise NotImplementedError()
+    else:
+        return redirect(url_for("setup_restaurant"))
+
+
+@app.route("/admin/dashboard", methods=['GET'])
 @login_required
 @admin_only
 def admindashboard():
     raise NotImplementedError()
+
+
+# Allows users to view the image files uploaded here
+@app.route('/uploads/<string:name>')
+def view_upload(name: str):
+    return send_from_directory(UPLOADS_FOLDER, name)
 
 
 # Error Handlers:

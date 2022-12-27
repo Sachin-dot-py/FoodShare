@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ restaurant.name }} - FoodShare</title>
+</head>
+<body>
+<img src="/uploads/{{ restaurant.coverpic }}" height="250" width="250">
+<h3>{{ restaurant.name }}</h3>
+<h5>{{ restaurant.address.name }}</h5>
+{% if restaurant.average_rating %}
+{{ "⭐️" * int(restaurant.average_rating) }} {{ restaurant.average_rating }}
+{% endif %}
+{{ restaurant.distance }} km away
+<br>
+</body>
+</html>

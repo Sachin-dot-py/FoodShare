@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Explore Restaurants - FoodShare</title>
+</head>
+<body>
+<form method="POST" action="{{ url_for('buyerdashboard') }}">
+    Search: <input type="search" name="restaurant_name">
+    <!-- TODO add autocomplete suggestions -->
+</form>
+<h1>Restaurants Near You</h1>
+{% for restaurant in restaurants[:8] %} <!-- Closest 8 restaurants -->
+<div class="restaurant">
+    <a href="/restaurants/{{ restaurant._id }}">
+        <img src="/uploads/{{ restaurant.coverpic }}" height="75" width="75">
+        <h3>{{ restaurant.name }}</h3>
+        <br>
+        {% if restaurant.average_rating %}
+        {{ "⭐️" * int(restaurant.average_rating) }} {{ restaurant.average_rating }}
+        {% endif %}
+        {{ restaurant.distance }} m away
+        <br>
+    </a>
+</div>
+{% if restaurant == restaurant[8] %}
+<h1>Other Restaurants</h1>
+{% endif %}
+{% endfor %}
+</body>
+</html>
