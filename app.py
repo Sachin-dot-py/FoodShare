@@ -8,7 +8,7 @@ from flask import Flask, request, render_template, session, redirect, url_for, a
 from werkzeug.utils import secure_filename
 
 # Local imports:
-from database import UserDB, RestaurantsDB
+from database import UserDB, RestaurantsDB, FoodItemsDB
 from utils import send_email, ORS
 from config import WEBSITE_BASE_URL, COMMS_EMAIL, SUPPORT_EMAIL, RESET_PASSWORD_TEMPLATE, RESET_PASSWORD_NOTIFICATION, \
     WELCOME_TEMPLATE, CHANGE_PASS_NOTIF, UPLOADS_FOLDER, ALLOWED_FILE_EXTENSIONS
@@ -60,8 +60,9 @@ def loginpage():
     error = None
     if request.method == 'POST':  # Login form has been submitted
         db = UserDB()
-        if db.check_credentials(request.form['email'], request.form['password']):
+        if user := db.check_credentials(request.form['email'], request.form['password']):
             session['email'] = request.form['email']
+            session['userid'] = user['userid']
             if request.form['keep_me_logged_in']:
                 session.permanent = True
             if request.form['next']:  # If user was initially redirected to the login page
@@ -89,12 +90,14 @@ def sign_up_page():
             # TODO Server Side Validation
         else:  # Sign the user up
             api = ORS()
-            address = {'name': request.form['address'], 'coordinates': api.get_coordinates(request.form['address'])}
-            db.add_user(request.form['fname'], request.form['lname'], request.form['email'], address, request.form['password'])
+            coordinates = api.get_coordinates(request.form['address'])
+            userid = db.add_user(request.form['fname'], request.form['lname'], request.form['email'], request.form['address'],
+                        coordinates[0], coordinates[1], request.form['password'])
             message = WELCOME_TEMPLATE.format(fname=request.form['fname'])
             send_email("Welcome to FoodShare", message, COMMS_EMAIL, [request.form['email']])
             # Sign the user in and redirect to the dashboard
             session['email'] = request.form['email']
+            session['userid'] = userid
             return redirect(url_for("buyerdashboard"))  # TODO decide the landing page
 
     #  Sign up page is opened (GET request) or signup form submitted with existing account
@@ -160,6 +163,7 @@ def changepassword():
 @app.route('/logout', methods=['GET'])
 def logoutpage():
     session.pop('email', None)
+    session.pop('userid', None)
     return redirect(url_for('homepage'))
 
 
@@ -181,21 +185,25 @@ def buyerdashboard():
     rdb = RestaurantsDB()
     restaurants = rdb.get_all_restaurants()
     api = ORS()
+    user_coords = (user['longitude'], user['latitude'])
     for restaurant in restaurants:
-        distance = api.distance_between(restaurant['address']['coordinates'], user['address']['coordinates'])
+        restaurant_coords = (restaurant['longitude'], restaurant['latitude'])
+        distance = api.distance_between(user_coords, restaurant_coords)
         restaurant['distance'] = distance
     return render_template("buyer_dashboard.html", restaurants=restaurants)
 
 
-@app.route("/restaurants/<string:restid>", methods=['GET'])
+@app.route("/restaurants/<int:restid>", methods=['GET'])
 @login_required
-def viewrestaurant(restid: str):
+def viewrestaurant(restid: int):
     rdb = RestaurantsDB()
     restaurant = rdb.view_restaurant(restid=restid)
     udb = UserDB()
     user = udb.get_user(session['email'])
     api = ORS()
-    distance = api.distance_between(restaurant['address']['coordinates'], user['address']['coordinates'])
+    restaurant_coords = (restaurant['longitude'], restaurant['latitude'])
+    user_coords = (user['longitude'], user['latitude'])
+    distance = api.distance_between(restaurant_coords, user_coords)
     restaurant['distance'] = distance
     return render_template("restaurant.html", restaurant=restaurant)
 
@@ -205,7 +213,7 @@ def viewrestaurant(restid: str):
 def setup_restaurant():
     rdb = RestaurantsDB()
     if request.method == "GET":  # Opening the webpage
-        if rdb.get_restaurant(email=session['email']):  # User has set up their restaurant
+        if rdb.get_restaurant(userid=session['userid']):  # User has set up their restaurant
             return redirect(url_for("sellerdashboard"))
         else:
             return render_template("setup_restaurant.html", allowed_extensions=", ".join(ALLOWED_FILE_EXTENSIONS))
@@ -223,9 +231,9 @@ def setup_restaurant():
         file.save(path)
 
         api = ORS()
-        address = {'name': request.form['address'], 'coordinates': api.get_coordinates(request.form['address'])}
+        coordinates = api.get_coordinates(request.form['address'])
 
-        rdb.add_restaurant(session['email'], request.form['name'], address, coverpic)
+        rdb.add_restaurant(session['userid'], request.form['name'], request.form['address'], coordinates[0], coordinates[1], coverpic)
         return redirect(url_for("sellerdashboard"))
 
 
@@ -233,21 +241,29 @@ def setup_restaurant():
 @login_required
 def sellerdashboard():
     rdb = RestaurantsDB()
-    if restaurant := rdb.get_restaurant(email=session['email']):  # User has set up their restaurant
+    if restaurant := rdb.get_restaurant(userid=session['userid']):  # User has set up their restaurant
         raise NotImplementedError()
     else:
         return redirect(url_for("setup_restaurant"))
 
+
+@app.route("/seller/updaterestaurant", methods=['GET'])
+@login_required
+def updatemenu():
+    rdb = RestaurantsDB()
+    if restaurant := rdb.get_restaurant(userid=session['userid']):  # User has set up their restaurant
+        fooditems = FoodItemsDB().fetch_items(restaurant['restid'])
+        return render_template("edit_restaurant.html", restaurant=restaurant, fooditems=fooditems)
+    else:
+        return redirect(url_for("setup_restaurant"))
 
 @app.route("/seller/updatemenu", methods=['GET'])
 @login_required
 def updatemenu():
     rdb = RestaurantsDB()
-    if restaurant := rdb.get_restaurant(email=session['email']):  # User has set up their restaurant
-        menu = restaurant['menu']
-        raise NotImplementedError()
-    else:
-        return redirect(url_for("setup_restaurant"))
+    restaurant = rdb.get_restaurant(userid=session['userid'])
+    # TODO
+    return 'Request Fulfilled', 200
 
 
 @app.route("/admin/dashboard", methods=['GET'])

@@ -10,6 +10,10 @@ WELCOME_TEMPLATE = """
 Hi {fname},
 <br><br>
 Welcome to FoodShare and thanks for joining!
+<br><br>
+Regards,
+<br>
+The <i>FoodShare</i> Team
 """
 
 RESET_PASSWORD_TEMPLATE = """ 	
@@ -25,7 +29,8 @@ If you did not request a password reset, please contact us at <a href="mailto:{S
 <br><br>
 Regards,
 <br>
-FoodShare"""
+The <i>FoodShare</i> Team
+"""
 
 RESET_PASSWORD_NOTIFICATION = """ 	
 Hi {fname},
@@ -36,7 +41,8 @@ If you did not perform this reset, please contact us <b>immediately</b> at <a hr
 <br><br>
 Regards,
 <br>
-FoodShare"""
+The <i>FoodShare</i> Team
+"""
 
 CHANGE_PASS_NOTIF = """ 	
 Hi {fname},
@@ -47,4 +53,5 @@ If you did not perform this action, please contact us <b>immediately</b> at <a h
 <br><br>
 Regards,
 <br>
-FoodShare"""
+The <i>FoodShare</i> Team
+"""

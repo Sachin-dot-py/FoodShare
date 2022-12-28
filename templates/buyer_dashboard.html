@@ -12,7 +12,7 @@
 <h1>Restaurants Near You</h1>
 {% for restaurant in restaurants[:8] %} <!-- Closest 8 restaurants -->
 <div class="restaurant">
-    <a href="/restaurants/{{ restaurant._id }}">
+    <a href="/restaurants/{{ restaurant.restid }}">
         <img src="/uploads/{{ restaurant.coverpic }}" height="75" width="75">
         <h3>{{ restaurant.name }}</h3>
         <br>

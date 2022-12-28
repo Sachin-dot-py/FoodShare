@@ -15,7 +15,7 @@ def hash_password(password: str, salt: bytes = None) -> tuple[bytes, bytes]:
         salt = os.urandom(64)
 
     if len(salt) != 64:  # Validates function argument
-        raise ValueError("Salt must be a string of 64 characters")
+        raise ValueError("Salt must be 64 characters")
 
     hashed = hashlib.pbkdf2_hmac('sha256', password.encode("utf-8"), salt, 100000)
     return hashed, salt
