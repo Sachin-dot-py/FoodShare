@@ -467,6 +467,32 @@ def generateinvoice(orderid: int):
         return "Unauthorized", 401
 
 
+@app.route("/seller/edit_restaurant", methods=['POST'])
+@login_required
+def edit_restaurant():
+    api = ORS()
+    coordinates = api.get_coordinates(request.form['address'])
+    restaurant = {'name': request.form['name'], 'address': request.form['address'], 'longitude': coordinates[0], 'latitude': coordinates[1]}
+
+    file = request.files.get('coverpic')
+    if file:
+        if not file.filename.lower().endswith(ALLOWED_FILE_EXTENSIONS):
+            return render_template("setup_restaurant.html", allowed_extensions=", ".join(ALLOWED_FILE_EXTENSIONS)
+                                   , error="Invalid file extension. Please upload only image files.")
+        extension = "." + file.filename.split(".")[-1]
+        coverpic = secure_filename(request.form['name'] + extension)
+        path = os.path.join(os.getcwd(), UPLOADS_FOLDER, coverpic)
+        while coverpic == "" or os.path.exists(path):
+            coverpic = "1" + coverpic  # Keeps prepending "1" to the filename until it is unique/valid
+            path = os.path.join(os.getcwd(), UPLOADS_FOLDER, coverpic)
+        file.save(path)
+        restaurant['coverpic'] = coverpic
+
+    rdb = RestaurantsDB()
+    rdb.edit_restaurant(session['userid'], **restaurant)
+    return redirect(url_for("updatemenu", alert="Restaurant details updated successfully"))
+
+
 @app.route("/seller/updatemenu", methods=['GET'])
 @login_required
 def updatemenu():

@@ -47,6 +47,29 @@
 </section>
 
 <div class="overlay hidden"></div>
+<h2>Update Restaurant Details</h2>
+<form method="POST" enctype="multipart/form-data" action="/seller/edit_restaurant">
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+    <table border=0 cellspacing=10>
+        <tr>
+            <td>Name of Restaurant:</td>
+            <td><input type="text" name="name" value="{{ restaurant.name }}" required autofocus></td>
+        </tr>
+        <tr>
+            <td>Address:</td>
+            <td><input type="text" name="address" value="{{ restaurant.address }}" required></td>
+        </tr>
+        <tr>
+            <td>Cover Picture:</td>
+            <td><input type="file" name="coverpic" accept="{{ allowed_extensions }}"> </td>
+        </tr>
+        <tr>
+            <td colspan="2"><button type="submit">Update Restaurant</button></td>
+        </tr>
+    </table>
+</form>
 <h2>Current Menu</h2>
 <table border="1">
     <tr>
