@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Menu - FoodShare</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='updatemenu.css') }}">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+</head>
+<body>
+<section class="modal hidden">
+  <div class="flex">
+    <button class="btn-close">⨉</button>
+  </div>
+  <div>
+    <h3 class="modal-header">Add Food Item</h3>
+    <p>
+      Lorem Ipsum Dolor Sit Amet
+    </p>
+  </div>
+    <form name="addfooditem" id="modalform" method="POST" action="/addfooditem" enctype="multipart/form-data">
+  <!-- Form -->
+        <input type="hidden" id="modalitemid" name="itemid" value="">
+        Name <input type="text" name="name" id="modalname" required>
+        <br>
+        Description <input type="text" name="description" id="modaldesc" required>
+        <br>
+        Price $<input type="number" step=".01" name="price" id="modalprice" required>
+        <br>
+        Image <input type="file" name="itemimg">
+        <br>
+        Dietary Restrictions
+        <br>
+        <input type="checkbox" name="dietary" value="dairy" id="dietarydairy"> Dairy Products
+        <br>
+        <input type="checkbox" name="dietary" value="meat" id="dietarymeat"> Meat
+        <br>
+        <input type="checkbox" name="dietary" value="seafood" id="dietaryseafood"> Seafood
+        <br>
+        <input type="checkbox" name="dietary" value="eggs" id="dietaryeggs"> Eggs
+        <br>
+        <input type="checkbox" name="dietary" value="nuts" id="dietarynuts"> Nuts
+        <br>
+        <button type="submit" class="btn">Save</button>
+        <button type="button" class="btn" onclick="modalDeleteFoodItem();">Delete</button>
+</form>
+
+</section>
+
+<div class="overlay hidden"></div>
+<h2>Current Menu</h2>
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Dietary Restrictions</th>
+        <th>In Menu</th>
+        <th>Actions</th>
+    </tr>
+    {% for item in fooditems %}
+    <form name="updatemenu" id="{{ item.itemid }}" method="POST" action="/updateinmenu">
+        <input type="hidden" name="itemid" value="{{ item.itemid }}">
+        <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.description }}</td>
+        <td>${{ item.price }}</td>
+        <td><img src="/uploads/{{ item.picture }}" height="25" width="50"></td>
+        <td>{{ ", ".join(item.restrictions) }}</td>
+        <td>
+            <input type="checkbox" name="menu" onclick="document.getElementById('{{ item.itemid }}').submit();"
+                   {% if item.inmenu %} checked {% endif %}>
+        </td>
+            <td><button type="button" onclick="addEditFoodItem({{ item.itemid }}, '{{ item.name }}', '{{ item.description }}', '{{ item.price }}', '{{ ', '.join(item.restrictions) }}');">Edit/Delete</button></td>
+        </tr>
+    </form>
+    {% endfor %}
+</table>
+<button class="addfooditem" onclick="addEditFoodItem();">Add Food Item</button>
+<div id="snackbar"></div>
+<script src="{{ url_for('static', filename='updatemenu.js') }}"></script>
+{% if alert %}
+<script>
+    notify("{{ alert }}");
+</script>
+{% endif %}
+</body>
+</html>

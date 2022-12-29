@@ -360,15 +360,8 @@ class FoodItemsDB(MySQL):
             name: The name of the food item.
             description: Description of the food item.
             price: Price of the food item, in dollars.
-            restrictions: Dietary restrictions, as a dictionary.
+            restrictions: Dietary restrictions, as a list.
             picture: Filename of the food item in the uploads folder (optional).
-
-            Restrictions is of the form:
-            {
-                "vegetarian": True,
-                "vegan": False,
-                "allergens": "Contains peanut."
-            }
 
         Returns:
             The itemid of the inserted food item
@@ -388,7 +381,7 @@ class FoodItemsDB(MySQL):
 
         price = round(price, 2)  # Round to 2 decimal places
         item = {'restid': restid, 'name': name, 'description': description, 'price': price,
-                'restrictions': restrictions, 'picture': picture}
+                'restrictions': ", ".join(restrictions), 'picture': picture}
         itemid = self._insert("fooditems", item)
         return itemid
 
@@ -399,8 +392,17 @@ class FoodItemsDB(MySQL):
             itemid: The unique ID of the food item.
             **kwargs: Arbitrary keyword arguments of details to change.
         """
-
+        if 'restrictions' in kwargs.keys():
+            kwargs['restrictions'] = ", ".join(kwargs['restrictions'])
         self._update("fooditems", kwargs, {"itemid": itemid})
+
+    def remove_item(self, itemid: int):
+        """ Removes a food item from the database.
+
+        Args:
+            itemid: The unique ID of the food item.
+        """
+        self._delete("fooditems", {"itemid": itemid})
 
     def get_item(self, itemid: int) -> dict:
         """ Fetches a food item from the database given its id.
@@ -412,6 +414,9 @@ class FoodItemsDB(MySQL):
             A dict consisting of the food item details if found, else None.
         """
         item = self._select("fooditems", ["*"], {"itemid": itemid}, select_one=True)
+        if item:
+            item['price'] = float(item['price'])
+            item['restrictions'] = item['restrictions'].split(", ")
         return item if item else None
 
     def fetch_items(self, restid: int) -> list[dict]:
@@ -423,7 +428,11 @@ class FoodItemsDB(MySQL):
         Returns:
             A list of dicts consisting of each food item.
         """
-        return self._select("fooditems", ["*"], {"restid": restid})
+        items = self._select("fooditems", ["*"], {"restid": restid})
+        for item in items:
+            item['price'] = float(item['price'])
+            item['restrictions'] = item['restrictions'].split(", ")
+        return items
 
     def fetch_menu(self, restid: int) -> list[dict]:
         """ Fetches all food items added by a restaurant and in the menu from the database.
@@ -434,4 +443,9 @@ class FoodItemsDB(MySQL):
         Returns:
             A list of dicts consisting of each food item.
         """
-        return self._select("fooditems", ["*"], {"restid": restid, "menu": True})
+        menu = self._select("fooditems", ["*"], {"restid": restid, "inmenu": True})
+        for item in menu:
+            item['price'] = float(item['price'])
+            item['restrictions'] = item['restrictions'].split(", ")
+        return menu
+

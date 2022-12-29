@@ -247,23 +247,83 @@ def sellerdashboard():
         return redirect(url_for("setup_restaurant"))
 
 
-@app.route("/seller/updaterestaurant", methods=['GET'])
+@app.route("/seller/updatemenu", methods=['GET'])
 @login_required
 def updatemenu():
     rdb = RestaurantsDB()
     if restaurant := rdb.get_restaurant(userid=session['userid']):  # User has set up their restaurant
         fooditems = FoodItemsDB().fetch_items(restaurant['restid'])
-        return render_template("edit_restaurant.html", restaurant=restaurant, fooditems=fooditems)
+        return render_template("updatemenu.html", restaurant=restaurant, fooditems=fooditems, alert=request.args.get('alert'))
     else:
         return redirect(url_for("setup_restaurant"))
 
-@app.route("/seller/updatemenu", methods=['GET'])
+@app.route("/updateinmenu", methods=['POST'])
 @login_required
-def updatemenu():
+def updateinmenu():
     rdb = RestaurantsDB()
     restaurant = rdb.get_restaurant(userid=session['userid'])
-    # TODO
-    return 'Request Fulfilled', 200
+    fdb = FoodItemsDB()
+    item = fdb.get_item(int(request.form['itemid']))
+    if item['restid'] == restaurant['restid']: # Validate that item is actually owned by this user.
+        fdb.edit_item(int(request.form['itemid']), **{'inmenu': True if request.form.get('menu') == "on" else False})
+    return redirect(url_for("updatemenu", alert=f"Successfully toggled {item['name']} in the menu"), code=303)  # 303 forces the POST into a GET request
+
+@app.route("/addfooditem", methods=['POST'])
+@login_required
+def addfooditem():
+    rdb = RestaurantsDB()
+    restaurant = rdb.get_restaurant(userid=session['userid'])
+    fdb = FoodItemsDB()
+    restrictions = request.form.getlist('dietary')
+    file = request.files['itemimg']
+    if file.filename.lower().endswith(ALLOWED_FILE_EXTENSIONS):
+        extension = "." + file.filename.split(".")[-1]
+        coverpic = secure_filename(request.form['name'] + extension)
+        path = os.path.join(os.getcwd(), UPLOADS_FOLDER, coverpic)
+        while coverpic == "" or os.path.exists(path):
+            coverpic = "1" + coverpic  # Keeps prepending "1" to the filename until it is unique/valid
+            path = os.path.join(os.getcwd(), UPLOADS_FOLDER, coverpic)
+        file.save(path)
+    else:
+        coverpic = "defaultitem.png"
+    fdb.add_item(restaurant['restid'], request.form['name'].strip("'"), request.form['description'].strip("'"), float(request.form['price']), restrictions, coverpic)
+    return redirect(url_for("updatemenu", alert=f"Successfully added {request.form['name']} to your food list"), code=303)  # 303 forces the POST into a GET request
+
+@app.route("/editfooditem", methods=['POST'])
+@login_required
+def editfooditem():
+    rdb = RestaurantsDB()
+    restaurant = rdb.get_restaurant(userid=session['userid'])
+    fdb = FoodItemsDB()
+    restrictions = request.form.getlist('dietary')
+    item = {'name': request.form['name'].strip("'"), 'description': request.form['description'].strip("'"), 'price': float(request.form['price']), 'restrictions': restrictions}
+    if request.files.get("itemimg", None):
+        file = request.files['itemimg']
+        if file.filename.lower().endswith(ALLOWED_FILE_EXTENSIONS):
+            extension = "." + file.filename.split(".")[-1]
+            coverpic = secure_filename(request.form['name'] + extension)
+            path = os.path.join(os.getcwd(), UPLOADS_FOLDER, coverpic)
+            while coverpic == "" or os.path.exists(path):
+                coverpic = "1" + coverpic  # Keeps prepending "1" to the filename until it is unique/valid
+                path = os.path.join(os.getcwd(), UPLOADS_FOLDER, coverpic)
+            file.save(path)
+        else:
+            coverpic = "defaultitem.png"
+        item['picture'] = coverpic
+    if fdb.get_item(int(request.form['itemid']))['restid'] == restaurant['restid']:  # Validate that item is actually owned by this user.
+        fdb.edit_item(int(request.form['itemid']), **item)
+    return redirect(url_for("updatemenu",  alert=f"Successfully edited {request.form['name']} on your food list"), code=303)  # 303 forces the POST into a GET request
+
+
+@app.route("/deletefooditem", methods=['POST'])
+@login_required
+def deletefooditem():
+    rdb = RestaurantsDB()
+    restaurant = rdb.get_restaurant(userid=session['userid'])
+    fdb = FoodItemsDB()
+    if fdb.get_item(int(request.form['itemid']))['restid'] == restaurant['restid']:  # Validate that item is actually owned by this user.
+        fdb.remove_item(int(request.form['itemid']))
+    return redirect(url_for("updatemenu",  alert=f"Successfully deleted {request.form['name']} from your food list"), code=303)  # 303 forces the POST into a GET request
 
 
 @app.route("/admin/dashboard", methods=['GET'])
@@ -303,6 +363,11 @@ def page_not_found(error):
 @error_page
 def internal_server_error(error):
     return {'error': 500, 'name': 'Internal Server Error', 'description': 'Oops! Something went wrong.'}
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return app.send_static_file('favicon.ico')
 
 
 if __name__ == '__main__':
