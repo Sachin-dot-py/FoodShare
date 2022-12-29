@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart - FoodShare</title>
+</head>
+<body>
+{% if cart %}
+Purchasing from:
+<br>
+{{ restaurant.name }}
+<br>
+{{ restaurant.address.replace("\n", "<br>") }}
+<br><br>
+<h1>Order Summary</h1>
+<br>
+<table border=1 cellspacing=0>
+    <tr>
+        <th>Item</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+    </tr>
+    {% for item in cart %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ "%.2f"|format(item.price) }}</td>
+            <td>${{ "%.2f"|format(item.total) }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<br>
+Total: ${{ "%.2f"|format(total) }}
+<br><br>
+<form method="POST" action="/cart/submit">
+    <button type="submit" name="action" value="checkout">Checkout</button>
+    <button type="submit" name="action" value="clear">Clear Cart</button>
+</form>
+{% else %}
+    <p>Your cart is empty. Go <a href="/restaurants">add some items</a></p>
+{% endif %}
+</body>
+</html>

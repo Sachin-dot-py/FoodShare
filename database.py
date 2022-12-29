@@ -1,4 +1,5 @@
 # System imports:
+import json
 import os
 import random
 import time
@@ -134,16 +135,26 @@ class UserDB(MySQL):
             kwargs['hashed_password'] = hashed_password
         self._update("users", kwargs, {"email": email.lower()})
 
-    def get_user(self, email: str) -> Union[dict, None]:
+    def get_user(self, email: str = None, userid: int = None) -> Union[dict, None]:
         """ Fetch a user from the database given their email address.
 
-        Args:
+        Args: (only one of the below)
             email: The email address of the user.
+            userid: The ID of the user.
 
         Returns:
             A dict consisting of the user details if found, else None.
+
+        Raises:
+            ValueError: If both email and userid are not provided.
         """
-        user = self._select("users", ["*"], {"email": email.lower()}, select_one=True)
+        if email:
+            user = self._select("users", ["*"], {"email": email.lower()}, select_one=True)
+        elif userid:
+            user = self._select("users", ["*"], {"userid": userid}, select_one=True)
+        else:
+            raise ValueError("Must provide either email or userid")
+
         if user:
             user['hashed_password'] = bytes(user['hashed_password'])
             user['salt'] = bytes(user['salt'])
@@ -513,3 +524,127 @@ class CartDB(MySQL):
         items = self._select("cart", ["restid", "itemid", "quantity"], {"userid": userid})
         return items
 
+    def clear_cart(self, userid: int):
+        """ Clears the cart of the user.
+
+        Args:
+            userid: The unique ID of the user being queried.
+        """
+        self._delete("cart", {"userid": userid})
+
+
+class OrdersDB(MySQL):
+    """ Used to perform actions related to orders in the SQL Database """
+    def __init__(self):
+        super().__init__()  # Initialize database
+
+    def create_order(self, userid: int, restid: int, items: list[dict], amount: float) -> int:
+        """ Adds an order to the database.
+
+        Args:
+            userid: The unique ID of the user placing the order.
+            restid: The unique ID of the restaurant the order is being placed at.
+            items: A list of dicts containing the itemid, name, quantity, and price of each item in the order.
+            amount: The total price of the order.
+
+        Returns:
+            The unique ID of the order.
+        """
+        order = {'userid': userid, 'restid': restid, 'items': json.dumps(items), 'amount': amount, 'ordertime': time.time()}
+        orderid = self._insert("orders", order)
+        return orderid
+
+    def mark_ready(self, orderid: int):
+        """ Marks an order as ready.
+
+        Args:
+            orderid: The unique ID of the order.
+        """
+        self._update("orders", {"orderstatus": "Ready"}, {"orderid": orderid})
+
+    def mark_collected(self, orderid: int):
+        """ Marks an order as collected.
+
+        Args:
+            orderid: The unique ID of the order.
+        """
+        self._update("orders", {"orderstatus": "Collected"}, {"orderid": orderid})
+
+    def cancel_order(self, orderid: int):
+        """ Cancels an order.
+
+        Args:
+            orderid: The unique ID of the order being cancelled.
+        """
+        self._delete("orders", {"orderid": orderid})
+
+    def fetch_user_orders(self, userid: int) -> list[dict]:
+        """ Fetches all orders placed by a user from the database.
+
+        Args:
+            userid: The unique ID of the user being queried.
+
+        Returns:
+            A list of dicts consisting of each order.
+        """
+        orders = self._select("orders", ["*"], {"userid": userid})
+        for order in orders:
+            order['items'] = json.loads(order['items'])
+        return orders
+
+    def fetch_rest_orders(self, restid: int) -> list[dict]:
+        """ Fetches all orders placed at a restaurant from the database.
+
+        Args:
+            restid: The unique ID of the restaurant being queried.
+
+        Returns:
+            A list of dicts consisting of each order.
+        """
+        orders = self._select("orders", ["*"], {"restid": restid})
+        for order in orders:
+            order['items'] = json.loads(order['items'])
+        return orders
+
+    def fetch_order(self, orderid: int) -> dict:
+        """ Fetches an order from the database given its id.
+
+        Args:
+            orderid: The unique ID of the order.
+
+        Returns:
+            A dict consisting of the order details
+        """
+        order = self._select("orders", ["*"], {"orderid": orderid}, select_one=True)
+        order['items'] = json.loads(order['items'])
+        return order
+
+
+class ContactFormResponsesDB(MySQL):
+    """ Used to store contact form responses in the SQL Database """
+    def __init__(self):
+        super().__init__()  # Initialize database
+
+    def add_response(self, response) -> None:
+        """ Adds a response to the database.
+
+        Args:
+            response: A dict containing the following response details:
+                fname: The first name of the person who submitted the form.
+                lname: The last name of the person who submitted the form.
+                email: The email of the person who submitted the form.
+                message: The message of the person who submitted the form.
+                nature: The nature of the message.
+                submittedat: The time the form was submitted.
+                message: The message.
+        """
+        self._insert("contactformresponses", response)
+
+    def fetch_responses(self) -> list[dict]:
+        """ Fetches all responses from the database.
+
+        Returns:
+            A list of dicts consisting of each response.
+        """
+        responses = self._select("contactformresponses", ["*"])
+        return responses

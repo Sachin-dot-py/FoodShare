@@ -36,5 +36,12 @@
 <h1>Other Restaurants</h1>
 {% endif %}
 {% endfor %}
+<div id="snackbar"></div>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+{% if alert %}
+<script>
+    notify("{{ alert }}");
+</script>
+{% endif %}
 </body>
 </html>

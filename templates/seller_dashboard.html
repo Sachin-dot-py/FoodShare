@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders - FoodShare</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+</head>
+<body>
+<h2>Accept New Orders: &nbsp; </h2>
+<label class="switch">
+  <input type="checkbox" id="acceptorders" onclick="toggleNewOrders();" {{ "checked" if restaurant.open }}>
+  <span class="slider round"></span>
+</label>
+<h1>Pending Orders</h1>
+<table>
+    <tr>
+        <th>Customer's Name</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Amount</th>
+        <th colspan="4">Order Actions</th>
+        <th>Invoice</th>
+    </tr>
+    {% for order in orders %}
+    {% if order.orderstatus == 'Preparing' or order.orderstatus == 'Ready' %}
+    <tr id="{{ order.orderid }}">
+        <td>{{ order.buyer.fname }} {{ order.buyer.lname }}</td>
+        <td>{{ order.date }}</td>
+        <td>{{ order.time }}</td>
+        <td>${{ "%.2f"|format(order.amount) }}</td>
+        <td colspan="2" class="onlyforpending{{ order.orderid }}"><button onclick="cancelOrder({{ order.orderid }});">Cancel Order</button></td>
+        {% if order.orderstatus == 'Preparing' %}
+        <td colspan="2" class="onlyforpending{{ order.orderid }}" id="{{ order.orderid }}button"><button type="button" onclick="markOrderReady( {{ order.orderid }} );">Mark as Ready</button></td>
+        {% else %}
+        <td colspan="2" class="onlyforpending{{ order.orderid }}" id="{{ order.orderid }}button"><button type="button" onclick="markOrderCollected( {{ order.orderid }} );">Mark as Collected</button></td>
+        {% endif %}
+        <td><button onclick="window.open('/orders/invoice/{{ order.orderid }}','_blank','resizable=yes');">Invoice</button></td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+<br>
+<h1>Fulfilled Orders</h1>
+<br>
+<table id="fulfilledorders">
+    <tr>
+        <th>Customer's Name</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Amount</th>
+        <th>Invoice</th>
+    </tr>
+    {% for order in orders %}
+    {% if order.orderstatus == 'Collected' %}
+    <tr id="{{ order.orderid }}">
+        <td>{{ order.buyer.fname }} {{ order.buyer.lname }}</td>
+        <td>{{ order.date }}</td>
+        <td>{{ order.time }}</td>
+        <td>${{ "%.2f"|format(order.amount) }}</td>
+        <td><button onclick="window.open('/orders/invoice/{{ order.orderid }}','_blank','resizable=yes');">Invoice</button></td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+<div id="snackbar"></div>
+<script src="{{ url_for('static', filename='buyer.js') }}"></script>
+{% if alert %}
+<script>
+    notify("{{ alert }}");
+</script>
+{% endif %}
+</body>
+</html>

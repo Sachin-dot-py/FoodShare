@@ -4,7 +4,7 @@ ALLOWED_FILE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
 UPLOADS_FOLDER = "uploads"
 
 COMMS_EMAIL = "no-reply@FoodShare.xyz"
-SUPPORT_EMAIL = "support@FoodShare.xyz"
+SUPPORT_EMAIL = "FoodShare31@gmail.com"
 
 WELCOME_TEMPLATE = """
 Hi {fname},
@@ -50,6 +50,86 @@ Hi {fname},
 This is to notify you that your FoodShare account password <b>has been changed</b>. 
 <br><br>
 If you did not perform this action, please contact us <b>immediately</b> at <a href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a>.
+<br><br>
+Regards,
+<br>
+The <i>FoodShare</i> Team
+"""
+
+ORDER_CONFIRM_BUYER = """
+Hi {fname},
+<br><br>
+This is to notify you that your order <b>#{orderid}</b> has been confirmed.
+<br><br>
+You can view the order details and status <a href="{link}">here</a>.
+<br><br>
+You will also receive an email once your order is ready for collection.
+<br><br>
+Regards,
+<br>
+The <i>FoodShare</i> Team
+"""
+
+ORDER_CONFIRM_SELLER = """
+Hi {fname},
+<br><br>
+This is to notify you that you have a new order <b>#{orderid}</b>.
+<br><br>
+<h2>Order Details</h2>
+<table>
+<tr><td>Buyer</td><td>{buyer}</td></tr>
+<tr><td>Amount</td><td>{amount}</td></tr>
+</table>
+<br><br>
+You can view the order details and update its status <a href="{link}">here</a>.
+<br><br>
+Regards,
+<br>
+The <i>FoodShare</i> Team
+"""
+
+ORDER_CANCELLED_BY_BUYER = """
+Hi,
+<br><br>
+This is to notify you that your order <b>#{orderid}</b> has been cancelled by the buyer, {buyer}.
+<br><br>
+Regards,
+<br>
+The <i>FoodShare</i> Team
+"""
+
+ORDER_CANCELLED_BY_SELLER = """
+Hi,
+<br><br>
+This is to notify you that your order <b>#{orderid}</b> has been cancelled by the restaurant, {restaurant}.
+<br><br>
+Regards,
+<br>
+The <i>FoodShare</i> Team
+"""
+
+ORDER_READY_FOR_COLLECTION = """
+Hi,
+<br><br>
+This is to notify you that your order <b>#{orderid}</b> is ready for collection.
+<br><br>
+Please proceed to the below restaurant to collect your order.
+<br><br>
+{restaurant}
+<br>
+{address}
+<br><br>
+Regards,
+<br>
+The <i>FoodShare</i> Team
+"""
+
+CONTACT_US_RESPONSE = """
+Hi Admin,
+<br><br>
+You have received a new {nature} from {fname} {lname} ({email}).
+<br><br>
+{message}
 <br><br>
 Regards,
 <br>

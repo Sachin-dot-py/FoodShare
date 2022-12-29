@@ -41,3 +41,69 @@ function notify(notification) {
   snackbar.className = "show";
   setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 3000);
 }
+
+function cancelOrder(orderid) {
+    $.ajax({
+        url: '/orders/cancel',
+        type: 'POST',
+        data: {'orderid': orderid},
+        success: function (data) {
+            notify("Order successfully cancelled!");
+            let order = document.getElementById(orderid.toString());
+            order.outerHTML = ""; // Clear this order from the page
+        },
+        failure: function (data) {
+            notify("Error cancelling order.");
+        }
+    });
+}
+
+function markOrderReady(orderid) {
+    $.ajax({
+        url: '/orders/markready',
+        type: 'POST',
+        data: {'orderid': orderid},
+        success: function (data) {
+            notify("Order marked as ready!");
+            // Change button to "Mark as Collected"
+            let order = document.getElementById(orderid.toString() + "button");
+            order.innerHTML = '<button onclick="markOrderCollected('+orderid+');">Mark as Collected</button>';
+        },
+        failure: function (data) {
+            notify("Error while marking order as ready.");
+        }
+    });
+}
+
+function markOrderCollected(orderid) {
+    $.ajax({
+        url: '/orders/markcollected',
+        type: 'POST',
+        data: {'orderid': orderid},
+        success: function (data) {
+            notify("Order marked as collected!");
+            document.querySelectorAll('.onlyforpending'+orderid.toString()).forEach(e => e.remove()); // Remove the cells which are only applicable for pending orders.
+
+            let order = document.getElementById(orderid.toString());
+            let fulfilledtable = document.getElementById("fulfilledorders");
+            fulfilledtable.innerHTML += order.outerHTML;  // Add this order to the fulfilled orders table
+            order.outerHTML = ""; // Clear this order from the pending orders table
+        },
+        failure: function (data) {
+            notify("Error while marking order as collected.");
+        }
+    });
+}
+
+function toggleNewOrders() {
+    $.ajax({
+        url: '/orders/toggle',
+        type: 'POST',
+        data: {'toggle': document.getElementById("acceptorders").checked},
+        success: function (data) {
+            notify("Order status updated!");
+        },
+        failure: function (data) {
+            notify("Error updating order status.");
+    }});
+}

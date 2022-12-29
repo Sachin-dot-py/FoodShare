@@ -179,3 +179,10 @@ async function autocompleteAddress(text){
         }
     }
 }
+
+const snackbar = document.getElementById("snackbar");
+function notify(notification) {
+  snackbar.innerHTML = notification;
+  snackbar.className = "show";
+  setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+}
