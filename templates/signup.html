@@ -7,6 +7,12 @@
     <title>Sign Up - FoodShare</title>
 </head>
 <body>
+<div class="navbar">
+  <a href="/">Home</a>
+  <a href="/login">Login</a>
+  <a href="/sign_up" class="active">Sign Up</a>
+  <a href="/contact_us">Contact Us</a>
+</div>
 <form method="POST" action="/sign_up" onsubmit="return validateForm();">
     {% if error %}
         <p>{{ error }}</p>

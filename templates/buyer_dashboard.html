@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Explore Restaurants - FoodShare</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
+<div class="navbar">
+<a href="{{  url_for('buyerdashboard') }}" class="active">Buyer Dashboard</a>
+<a href="{{  url_for('changepassword') }}">My Profile</a> <!-- TODO Change to profile page later -->
+<a href="">Order History</a>
+<a href="">Chats</a>
+<a href="{{  url_for('logoutpage') }}" class="split">Logout</a>
+<a href="{{  url_for('sellerdashboard') }}" class="split">To Seller View</a>
+</div>
 <form method="POST" action="{{ url_for('buyerdashboard') }}">
     Search: <input type="search" name="restaurant_name">
     <!-- TODO add autocomplete suggestions -->

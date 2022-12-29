@@ -52,7 +52,10 @@ def error_page(func):
 @app.route("/", methods=["GET"])
 def homepage():
     logged_in = bool(session.get("email", None))
-    return render_template("home.html", logged_in=logged_in)
+    if logged_in:
+        return redirect(url_for("buyerdashboard"))
+    else:
+        return render_template("home.html")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -203,9 +206,16 @@ def viewrestaurant(restid: int):
     api = ORS()
     restaurant_coords = (restaurant['longitude'], restaurant['latitude'])
     user_coords = (user['longitude'], user['latitude'])
-    distance = api.distance_between(restaurant_coords, user_coords)
-    restaurant['distance'] = distance
+    restaurant['distance'] = api.distance_between(restaurant_coords, user_coords)
+    restaurant['menu'] = [restaurant['menu'][x:x+4] for x in range(0, len(restaurant['menu']), 4)]  # Split into groups of 4
     return render_template("restaurant.html", restaurant=restaurant)
+
+
+@app.route("/cart/add", methods=['POST'])
+@login_required
+def addtocart():
+    rdb = RestaurantsDB()
+    # TODO
 
 
 @app.route("/seller/setup", methods=['GET', 'POST'])
@@ -264,7 +274,7 @@ def updateinmenu():
     restaurant = rdb.get_restaurant(userid=session['userid'])
     fdb = FoodItemsDB()
     item = fdb.get_item(int(request.form['itemid']))
-    if item['restid'] == restaurant['restid']: # Validate that item is actually owned by this user.
+    if item['restid'] == restaurant['restid']:  # Validate that item is actually owned by this user.
         fdb.edit_item(int(request.form['itemid']), **{'inmenu': True if request.form.get('menu') == "on" else False})
     return redirect(url_for("updatemenu", alert=f"Successfully toggled {item['name']} in the menu"), code=303)  # 303 forces the POST into a GET request
 
