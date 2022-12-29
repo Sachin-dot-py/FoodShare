@@ -8,7 +8,7 @@ from flask import Flask, request, render_template, session, redirect, url_for, a
 from werkzeug.utils import secure_filename
 
 # Local imports:
-from database import UserDB, RestaurantsDB, FoodItemsDB
+from database import UserDB, RestaurantsDB, FoodItemsDB, CartDB
 from utils import send_email, ORS
 from config import WEBSITE_BASE_URL, COMMS_EMAIL, SUPPORT_EMAIL, RESET_PASSWORD_TEMPLATE, RESET_PASSWORD_NOTIFICATION, \
     WELCOME_TEMPLATE, CHANGE_PASS_NOTIF, UPLOADS_FOLDER, ALLOWED_FILE_EXTENSIONS
@@ -208,15 +208,24 @@ def viewrestaurant(restid: int):
     user_coords = (user['longitude'], user['latitude'])
     restaurant['distance'] = api.distance_between(restaurant_coords, user_coords)
     restaurant['menu'] = [restaurant['menu'][x:x+4] for x in range(0, len(restaurant['menu']), 4)]  # Split into groups of 4
-    return render_template("restaurant.html", restaurant=restaurant)
+    cart = CartDB().fetch_cart(session['userid'])
+    cart = {item['itemid']: item['quantity'] for item in cart}
+    return render_template("restaurant.html", restaurant=restaurant, cart=cart)
 
 
-@app.route("/cart/add", methods=['POST'])
+@app.route("/cart/update", methods=['POST'])
 @login_required
-def addtocart():
-    rdb = RestaurantsDB()
-    # TODO
+def updatecart():
+    cdb = CartDB()
+    try:
+        if request.form['action'] == 'increment':
+            cdb.increment_item(session['userid'], int(request.form['itemid']))
+        elif request.form['action'] == 'decrement':
+            cdb.decrement_item(session['userid'], int(request.form['itemid']))
+    except ValueError:
+        abort(400)  # Signal to frontend that the request was invalid.
 
+    return 'Successful', 200
 
 @app.route("/seller/setup", methods=['GET', 'POST'])
 @login_required

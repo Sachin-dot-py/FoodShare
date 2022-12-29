@@ -449,3 +449,67 @@ class FoodItemsDB(MySQL):
             item['restrictions'] = item['restrictions'].split(", ")
         return menu
 
+
+class CartDB(MySQL):
+    """ Used to perform actions related to users' carts in the SQL Database """
+    def __init__(self):
+        super().__init__()  # Initialize database
+
+    def increment_item(self, userid: int, itemid: int):
+        """ Adds/increments an item to the cart of the user.
+
+        Args:
+            userid: Id of the user whom the item is being added to.
+            itemid: Id of the item being added.
+
+        Returns:
+            True if the item was added to the cart, False if the item mismatches with the preexisting restaurant.
+
+        Raises:
+            ValueError: If items from multiple restaurants are being added to cart.
+        """
+        cart = self.fetch_cart(userid)
+        if cart:
+            if cart[0]['restid'] != FoodItemsDB().get_item(itemid)['restid']:
+                raise ValueError("Cannot add items from multiple restaurants to the cart.")
+
+        cart = {item['itemid']: item['quantity'] for item in cart}
+
+        if itemid in cart.keys():  # If item is already in cart
+            self._update("cart", {"quantity": cart[itemid] + 1}, {"userid": userid, "itemid": itemid})
+        else:
+            self._insert("cart", {"userid": userid, "itemid": itemid, "quantity": 1, "restid": FoodItemsDB().get_item(itemid)['restid']})
+
+    def decrement_item(self, userid: int, itemid: int) -> None:
+        """ Removes/decrements an item from the cart of the user.
+
+        Args:
+            userid: Id of the user whom the item is being removed from.
+            itemid: Id of the item being removed.
+
+        Raises:
+            ValueError: If the item is not in the cart.
+        """
+        cart = self.fetch_cart(userid)
+        cart = {item['itemid']: item['quantity'] for item in cart}
+
+        if itemid in cart.keys():
+            if cart[itemid] == 1:  # Decrement to zero = Delete
+                self._delete("cart", {"userid": userid, "itemid": itemid})
+            else:
+                self._update("cart", {"quantity": cart[itemid] - 1}, {"userid": userid, "itemid": itemid})
+        else:
+            raise ValueError("Item not in cart.")
+
+    def fetch_cart(self, userid: int) -> list[dict]:
+        """ Fetches all cart items added by a user from the database.
+
+        Args:
+            userid: The unique ID of the user being queried.
+
+        Returns:
+            A list of dicts consisting of each cart item.
+        """
+        items = self._select("cart", ["restid", "itemid", "quantity"], {"userid": userid})
+        return items
+

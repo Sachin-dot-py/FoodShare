@@ -101,7 +101,15 @@
         {% else %}
         <p>Contains no allergens</p>
         {% endif %}
-        <p><button onclick="addToCart({{ item.itemid }}, {{ item.restid }});">Add to Cart</button></p>
+        <p>
+            <button onclick="updateCart({{ item.itemid }}, 'decrement');">-</button>
+            {% if item.itemid in cart.keys() %}
+            <input type="text" value="{{ cart[item.itemid] }}" name="quantity" id="{{ item.itemid }}" disabled>
+            {% else %}
+            <input type="text" value="0" name="quantity" id="{{ item.itemid }}" disabled>
+            {% endif %}
+            <button onclick="updateCart({{ item.itemid }}, 'increment');">+</button>
+        </p>
     </div>
   </div>
     {% endfor %}
