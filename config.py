@@ -1,6 +1,7 @@
 WEBSITE_BASE_URL = "http://127.0.0.1:5000"  # To change in production
 
 ALLOWED_FILE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
+EMAIL_REGEX = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'  # Regex for email validation
 UPLOADS_FOLDER = "uploads"
 
 COMMS_EMAIL = "no-reply@FoodShare.xyz"

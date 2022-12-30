@@ -17,7 +17,7 @@
       Lorem Ipsum Dolor Sit Amet
     </p>
   </div>
-    <form name="addfooditem" id="modalform" method="POST" action="/addfooditem" enctype="multipart/form-data">
+    <form name="addfooditem" id="modalform" method="POST" action="/fooditem/add" enctype="multipart/form-data">
   <!-- Form -->
         <input type="hidden" id="modalitemid" name="itemid" value="">
         Name <input type="text" name="name" id="modalname" required>
@@ -48,7 +48,7 @@
 
 <div class="overlay hidden"></div>
 <h2>Update Restaurant Details</h2>
-<form method="POST" enctype="multipart/form-data" action="/seller/edit_restaurant">
+<form method="POST" enctype="multipart/form-data" action="/restaurant/edit">
     {% if error %}
         <p>{{ error }}</p>
     {% endif %}
@@ -82,7 +82,7 @@
         <th>Actions</th>
     </tr>
     {% for item in fooditems %}
-    <form name="updatemenu" id="{{ item.itemid }}" method="POST" action="/updateinmenu">
+    <form name="updatemenu" id="{{ item.itemid }}" method="POST" action="/menu/update">
         <input type="hidden" name="itemid" value="{{ item.itemid }}">
         <tr>
         <td>{{ item.name }}</td>

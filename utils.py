@@ -55,7 +55,7 @@ class ORS:
             json=data
         ).json()
 
-    def autocomplete_coordinates(self, address: str) -> dict[str, list[int, int]]:
+    def autocomplete_coordinates(self, address: str) -> dict[str, list[float, float]]:
         """ Returns a dictionary mapping name to coordinates of location results for a given address """
         result = self._perform_get_request(
             "/geocode/autocomplete",
@@ -72,7 +72,7 @@ class ORS:
             locations[name] = coordinates
         return locations
 
-    def get_coordinates(self, address: str) -> list[int, int]:
+    def get_coordinates(self, address: str) -> list[float, float]:
         """ Returns coordinates (longitude and latitude) for a given address"""
         result = self._perform_get_request(
             "/geocode/search",
@@ -85,7 +85,7 @@ class ORS:
         # Returns only the coordinates
         return result['features'][0]['geometry']['coordinates']
 
-    def distance_between(self, coord1: list[int, int], coord2: list[int, int]) -> int:
+    def distance_between(self, coord1: tuple[float, float], coord2: tuple[float, float]) -> float:
         """ Get the distance between two coordinates in metres as an integer"""
         result = self._perform_post_request(
             "/v2/matrix/foot-walking",

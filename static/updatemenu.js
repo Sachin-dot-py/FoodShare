@@ -31,7 +31,7 @@ const openModal = function () {
 
 const modalDeleteFoodItem = function () {
     let modalitemid = document.getElementById("modalitemid");
-    modalForm.action = "/deletefooditem";
+    modalForm.action = "/fooditem/delete";
     modalForm.submit();
 }
 
@@ -43,7 +43,7 @@ const addEditFoodItem = function (itemid=null, name=null, description=null, pric
       modalheader = document.querySelector(".modal-header");
       modalheader.innerHTML = "Edit Food Item";
 
-      modalForm.action = "/editfooditem";
+      modalForm.action = "/fooditem/edit";
       document.getElementById("modalname").value = name;
         document.getElementById("modaldesc").value = description;
         document.getElementById("modalprice").value = price;
@@ -86,7 +86,7 @@ const addEditFoodItem = function (itemid=null, name=null, description=null, pric
         // Reset modal form
         modalheader = document.querySelector(".modal-header");
         modalheader.innerHTML = "Add Food Item";
-        modalForm.action = "/addfooditem";
+        modalForm.action = "/fooditem/add";
         document.getElementById("modalname").value = "";
         document.getElementById("modaldesc").value = "";
         document.getElementById("modalprice").value = "";

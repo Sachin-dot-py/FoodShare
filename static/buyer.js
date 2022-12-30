@@ -140,7 +140,7 @@ const openModal = function () {
 
 const modalDeleteFoodItem = function () {
     let modalitemid = document.getElementById("modalitemid");
-    modalForm.action = "/deletefooditem";
+    modalForm.action = "/fooditem/delete";
     modalForm.submit();
 }
 

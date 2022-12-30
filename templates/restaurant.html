@@ -75,12 +75,12 @@
 <body>
 <div class="navbar">
     <a href="#"><img src="{{ url_for('static', filename='logo.png') }}" height="30px" width="50px" style="padding: 0px 0px 0px 0px;"></a>
-<a href="{{  url_for('buyerdashboard') }}" class="active">Buyer Dashboard</a>
-<a href="{{  url_for('changepassword') }}">My Profile</a> <!-- TODO Change to profile page later -->
+<a href="{{  url_for('buyer_dashboard') }}" class="active">Buyer Dashboard</a>
+<a href="{{  url_for('change_password') }}">My Profile</a> <!-- TODO Change to profile page later -->
 <a href="">Order History</a>
 <a href="">Chats</a>
-<a href="{{  url_for('logoutpage') }}" class="split">Logout</a>
-<a href="{{  url_for('sellerdashboard') }}" class="split">To Seller View</a>
+<a href="{{  url_for('logout_page') }}" class="split">Logout</a>
+<a href="{{  url_for('seller_dashboard') }}" class="split">To Seller View</a>
 </div>
 <img src="/uploads/{{ restaurant.coverpic }}" height="250" width="250">
 <h3>{{ restaurant.name }}</h3>
