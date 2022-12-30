@@ -9,7 +9,7 @@ from flask import Flask, request, render_template, session, redirect, url_for, a
 from werkzeug.utils import secure_filename
 
 # Local imports:
-from database import UserDB, RestaurantsDB, FoodItemsDB, CartDB, OrdersDB, ContactFormResponsesDB
+from database import UserDB, RestaurantsDB, FoodItemsDB, CartDB, OrdersDB, ContactFormResponsesDB, ReviewsDB
 from utils import send_email, ORS
 from config import WEBSITE_BASE_URL, COMMS_EMAIL, SUPPORT_EMAIL, RESET_PASSWORD_TEMPLATE, RESET_PASSWORD_NOTIFICATION, \
     WELCOME_TEMPLATE, CHANGE_PASS_NOTIF, UPLOADS_FOLDER, ALLOWED_FILE_EXTENSIONS, ORDER_CONFIRM_BUYER, \
@@ -413,12 +413,32 @@ def markcollected():
 def buyerorders():
     odb = OrdersDB()
     orders = odb.fetch_user_orders(session['userid'])
+    reviewdb = ReviewsDB()
+    reviews = reviewdb.fetch_user_reviews(session['userid'])
+    reviews = {review['orderid']: review['stars'] for review in reviews}
     rdb = RestaurantsDB()
     for order in orders:
         order['restaurant'] = rdb.get_restaurant(restid=order['restid'])
         order['date'] = datetime.fromtimestamp(order['ordertime']).strftime("%d %b %Y")
         order['time'] = datetime.fromtimestamp(order['ordertime']).strftime("%I:%M %p")
+        order['review'] = reviews.get(order['orderid'], None)  # If the user has not reviewed the order, the value is None
     return render_template("buyer_orders.html", orders=orders)
+
+
+@app.route("/reviews/add", methods=['POST'])
+@login_required
+def addreview():
+    orderid = int(request.form['orderid'])
+    stars = int(request.form['stars'])
+    title = request.form['title']
+    description = request.form['description']
+    order = OrdersDB().fetch_order(orderid)
+    if order['userid'] == session['userid']:
+        reviewdb = ReviewsDB()
+        reviewdb.add_review(orderid, stars, title, description)
+        return 'Successful', 200
+    else:
+        return 'Unauthorized', 401
 
 
 @app.route("/orders/cancel", methods=['POST'])

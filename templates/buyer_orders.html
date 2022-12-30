@@ -4,9 +4,40 @@
     <meta charset="UTF-8">
     <title>My Orders - FoodShare</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='updatemenu.css') }}">
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+<section class="modal hidden">
+  <div class="flex">
+    <button class="btn-close">⨉</button>
+  </div>
+  <div>
+    <h3 class="modal-header">Add Review</h3>
+    <p>
+      Lorem Ipsum Dolor Sit Amet
+    </p>
+  </div>
+    <form name="addreview" id="modaladdreviewform" method="POST" action="/reviews/add">
+        <input type="hidden" id="modalitemid" name="orderid" value="">
+        Title <input type="text" name="title" id="modaltitle" required>
+        <br>
+        Description <input type="text" name="description" id="modaldesc" required>
+        <br>
+        Stars <input type="hidden" name="stars" id="modalstars" required>
+        <span class="fa fa-star" id="modalstar1" onclick="modalSetStars(1);"></span>
+        <span class="fa fa-star" id="modalstar2" onclick="modalSetStars(2);"></span>
+        <span class="fa fa-star" id="modalstar3" onclick="modalSetStars(3);"></span>
+        <span class="fa fa-star" id="modalstar4" onclick="modalSetStars(4);"></span>
+        <span class="fa fa-star" id="modalstar5" onclick="modalSetStars(5);"></span>
+
+        <button type="submit" class="btn">Save</button>
+</form>
+
+</section>
+
+<div class="overlay hidden"></div>
 <h1>Pending Orders</h1>
 <table>
     <tr>
@@ -48,7 +79,18 @@
         <td>{{ order.date }}</td>
         <td>{{ order.time }}</td>
         <td>${{ order.amount }}</td>
-        <td colspan="2"><button onclick="addReview({{ order.orderid }});">Add Review</button></td>
+            {% if order.review == none %}
+        <td colspan="2" id="{{ order.orderid }}reviewbtn"><button onclick="openAddReviewModal({{ order.orderid }});">Add Review</button></td>
+            {% else %}
+        <td colspan="2" id="{{ order.orderid }}reviewbtn">
+            {% for i in range(order.review) %}
+            <span class="fa fa-star checked"></span>
+            {% endfor %}
+            {% for i in range(5 - order.review) %}
+            <span class="fa fa-star"></span>
+            {% endfor %}
+        </td>
+            {% endif %}
         <td><button onclick="window.open('/orders/invoice/{{ order.orderid }}','_blank','resizable=yes');">Invoice</button></td>
     </tr>
     {% endif %}

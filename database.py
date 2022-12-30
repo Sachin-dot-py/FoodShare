@@ -322,6 +322,7 @@ class RestaurantsDB(MySQL):
         if restaurant:
             restaurant['longitude'] = float(restaurant['longitude'])
             restaurant['latitude'] = float(restaurant['latitude'])
+            if restaurant['avgreview']: restaurant['avgreview'] = float(restaurant['avgreview'])
 
         return restaurant if restaurant else None
 
@@ -342,6 +343,7 @@ class RestaurantsDB(MySQL):
         restaurant = self.get_restaurant(name=name, restid=restid, userid=userid)
         if restaurant:
             restaurant['menu'] = FoodItemsDB().fetch_menu(restaurant['restid'])
+            if restaurant['avgreview']: restaurant['avgreview'] = float(restaurant['avgreview'])
         return restaurant
 
     def get_all_restaurants(self) -> list[dict]:
@@ -354,6 +356,7 @@ class RestaurantsDB(MySQL):
         for restaurant in restaurants:
             restaurant['longitude'] = float(restaurant['longitude'])
             restaurant['latitude'] = float(restaurant['latitude'])
+            if restaurant['avgreview']: restaurant['avgreview'] = float(restaurant['avgreview'])
         return restaurants
 
 
@@ -648,3 +651,74 @@ class ContactFormResponsesDB(MySQL):
         """
         responses = self._select("contactformresponses", ["*"])
         return responses
+
+
+class ReviewsDB(MySQL):
+    """ Used to store reviews in the SQL Database """
+    def __init__(self):
+        super().__init__()  # Initialize database
+
+    def add_review(self, orderid: int, stars: int, title: str, description: str) -> int:
+        """ Adds a review to the database and updates the restaurants table with the new rating.
+
+        Args:
+            orderid: The unique ID of the order the review is for.
+            stars: The number of stars given in the review.
+            title: The title of the review.
+            description: The description of the review.
+
+        Returns:
+            The unique ID of the review.
+        """
+        # Insert into reviews table
+        order = OrdersDB().fetch_order(orderid)
+        review = {'orderid': orderid, 'stars': stars, 'title': title, 'description': description, 'submittedat': time.time(),
+                  'userid': order['userid'], 'restid': order['restid']}
+        reviewid = self._insert("reviews", review)
+
+        # Update restaurant's overall rating
+        rdb = RestaurantsDB()
+        restaurant = rdb.get_restaurant(restid=order['restid'])
+        if restaurant['numreviews'] > 0:
+            newrating = (restaurant['avgreview'] * restaurant['numreviews'] + stars) / (restaurant['numreviews'] + 1)
+        else:
+            newrating = stars
+        rdb.edit_restaurant(restaurant['userid'], **{'avgreview': round(newrating, 2), 'numreviews': restaurant['numreviews'] + 1})
+
+        return reviewid
+
+    def fetch_rest_reviews(self, restid: int) -> list[dict]:
+        """ Fetches all reviews for a restaurant from the database.
+
+        Args:
+            restid: The unique ID of the restaurant being queried.
+
+        Returns:
+            A list of dicts consisting of each review.
+        """
+        reviews = self._select("reviews", ["*"], {"restid": restid})
+        return reviews
+
+    def fetch_user_reviews(self, userid: int) -> list[dict]:
+        """ Fetches all reviews by a user from the database.
+
+        Args:
+            userid: The unique ID of the user being queried.
+
+        Returns:
+            A list of dicts consisting of each review.
+        """
+        reviews = self._select("reviews", ["*"], {"userid": userid})
+        return reviews
+
+    def fetch_review(self, reviewid: int) -> dict:
+        """ Fetches a review from the database given its id.
+
+        Args:
+            reviewid: The unique ID of the review.
+
+        Returns:
+            A dict consisting of the review details
+        """
+        review = self._select("reviews", ["*"], {"reviewid": reviewid}, select_one=True)
+        return review

@@ -14,10 +14,6 @@
 <a href="{{  url_for('logoutpage') }}" class="split">Logout</a>
 <a href="{{  url_for('sellerdashboard') }}" class="split">To Seller View</a>
 </div>
-<form method="POST" action="{{ url_for('buyerdashboard') }}">
-    Search: <input type="search" name="restaurant_name">
-    <!-- TODO add autocomplete suggestions -->
-</form>
 <h1>Restaurants Near You</h1>
 {% for restaurant in restaurants[:8] %} <!-- Closest 8 restaurants -->
 <div class="restaurant">
