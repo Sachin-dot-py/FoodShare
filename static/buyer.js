@@ -175,7 +175,7 @@ $("#modaladdreviewform").submit(function(e) {
             stars = document.getElementById("modalstars").value
             modalitemid = document.getElementById("modalitemid")
             reviewbtn = document.getElementById(modalitemid.value+"reviewbtn");
-            reviewbtn.innerHTML = '<span class="fa fa-star checked"></span>'.repeat(stars) + '<span class="fa fa-star"></span>'.repeat(5-stars);
+            reviewbtn.innerHTML = '<span class="fa fa-star checked"></span>&nbsp;'.repeat(stars) + '<span class="fa fa-star"></span>&nbsp;'.repeat(5-stars);
 
             // Clear the user inputs from the modal
             for(let i=1; i<=5; i++) {

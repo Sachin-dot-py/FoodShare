@@ -16,7 +16,7 @@
   <div>
     <h3 class="modal-header">Add Review</h3>
     <p>
-      Lorem Ipsum Dolor Sit Amet
+      Add a review of your order to provide valuable insights for other potential customers.
     </p>
   </div>
     <form name="addreview" id="modaladdreviewform" method="POST" action="/reviews/add">
@@ -25,7 +25,7 @@
         <br>
         Description <input type="text" name="description" id="modaldesc" required>
         <br>
-        Stars <input type="hidden" name="stars" id="modalstars" required>
+        Stars <input type="hidden" name="stars" id="modalstars" value=0 required>
         <span class="fa fa-star" id="modalstar1" onclick="modalSetStars(1);"></span>
         <span class="fa fa-star" id="modalstar2" onclick="modalSetStars(2);"></span>
         <span class="fa fa-star" id="modalstar3" onclick="modalSetStars(3);"></span>
@@ -45,6 +45,7 @@
         <th>Date</th>
         <th>Time</th>
         <th>Amount</th>
+        <th>Order Status</th>
         <th colspan="2">Order Actions</th>
         <th>Invoice</th>
     </tr>
@@ -55,6 +56,7 @@
         <td>{{ order.date }}</td>
         <td>{{ order.time }}</td>
         <td>${{ order.amount }}</td>
+        <td>{{ order.orderstatus }}</td>
         <td colspan="2"><button onclick="cancelOrder({{ order.orderid }});">Cancel Order</button></td>
         <td><button onclick="window.open('/orders/invoice/{{ order.orderid }}','_blank','resizable=yes');">Invoice</button></td>
     </tr>
@@ -69,7 +71,7 @@
         <th>Date</th>
         <th>Time</th>
         <th>Amount</th>
-        <th colspan="2">Order Actions</th>
+        <th colspan="2">Reviews</th>
         <th>Invoice</th>
     </tr>
     {% for order in orders %}

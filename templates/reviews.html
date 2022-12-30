@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ restaurant.name }} Reviews - FoodShare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .checked {
+  color: orange;
+}
+    </style>
+</head>
+<body>
+{% if is_owner %}
+<h1>Your Customer Reviews</h1>
+{% else %}
+<h1>Customer Reviews for {{ restaurant.name }}</h1>
+{% endif %}
+{% if restaurant.avgreview %}
+        {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|round|int }}
+        {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|round|int) }}
+        {{ restaurant.avgreview }} stars
+({{ restaurant.numreviews }} reviews)
+        <br>
+{% endif %}
+{% for review in reviews %}
+    <div class="review">
+        <h3>
+        {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * review.stars|round|int }}
+        {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-review.stars|round|int) }}
+        {{ review.title }}
+        </h3>
+        <p>{{ review.description }}</p>
+        <p>{{ (review.userid|fetch_user).fname }} {{( review.userid|fetch_user).lname }} on {{ review.submittedat|format_date }}</p>
+        <p><a href="/orders/invoice/{{ review.orderid }}">View this order.</a></p>
+    </div>
+{% endfor %}
+</body>
+</html>

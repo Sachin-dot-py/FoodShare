@@ -22,6 +22,24 @@ app.secret_key = FLASK_SECRET_KEY
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1000 * 1000  # Limiting uploads to 8 megabytes
 
 
+@app.template_filter()
+def format_date(epoch_time: int) -> str:
+    """ Converts epoch time to a readable date format for use in the html templates """
+    return datetime.fromtimestamp(epoch_time).strftime('%d %b %Y')
+
+
+@app.template_filter()
+def format_datetime(epoch_time: int) -> str:
+    """ Converts epoch time to a readable date and time format for use in the html templates """
+    return datetime.fromtimestamp(epoch_time).strftime('%d %b %Y, %I:%M %p')
+
+
+@app.template_filter()
+def fetch_user(userid: int):
+    """ Returns the user with the given userid for use in the html templates """
+    return UserDB().get_user(userid=userid)
+
+
 # Decorator function for pages requiring a login
 def login_required(func):
     @wraps(func)
@@ -267,7 +285,7 @@ def viewcart():
             details['total'] = round(details['quantity'] * details['price'], 2)
             items.append(details)
         total = sum(item['total'] for item in items)
-        return render_template("cart.html", cart=items, total=total, restaurant=restaurant)
+        return render_template("cart.html", cart=items, total=total, restaurant=restaurant, alert=request.args.get('alert'))
     else:
         return render_template("cart.html", cart=[])
 
@@ -280,6 +298,10 @@ def submitcart():
         cart = cdb.fetch_cart(session['userid'])
         rdb = RestaurantsDB()
         restaurant = rdb.view_restaurant(restid=cart[0]['restid'])
+
+        if not restaurant['open']:  # If the restaurant is not accepting new orders
+            return redirect(url_for('viewcart', alert="Your order was not sent, as the restaurant is currently not accepting new orders. Please try again later."))
+
         fdb = FoodItemsDB()
         items = []
         for item in cart:
@@ -439,6 +461,19 @@ def addreview():
         return 'Successful', 200
     else:
         return 'Unauthorized', 401
+
+
+@app.route("/reviews/view/<int:restid>", methods=['GET'])
+@login_required
+def viewreviews(restid: int):
+    reviewdb = ReviewsDB()
+    reviews = reviewdb.fetch_rest_reviews(restid)
+    rdb = RestaurantsDB()
+    restaurant = rdb.get_restaurant(restid=restid)
+    if restaurant['userid'] == session['userid']:  # If the user is the owner of the restaurant
+        return render_template("reviews.html", reviews=reviews, restaurant=restaurant, is_owner=True)
+    else:
+        return render_template("reviews.html", reviews=reviews, restaurant=restaurant, is_owner=False)
 
 
 @app.route("/orders/cancel", methods=['POST'])

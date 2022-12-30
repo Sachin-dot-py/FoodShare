@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Cart - FoodShare</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
 {% if cart %}
@@ -39,6 +40,13 @@ Total: ${{ "%.2f"|format(total) }}
 </form>
 {% else %}
     <p>Your cart is empty. Go <a href="/restaurants">add some items</a></p>
+{% endif %}
+<div id="snackbar"></div>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+{% if alert %}
+<script>
+    notify("{{ alert }}");
+</script>
 {% endif %}
 </body>
 </html>
