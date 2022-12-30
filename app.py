@@ -49,18 +49,6 @@ def login_required(func):
     return decorator
 
 
-# Decorator function for admin-only pages
-def admin_only(func):
-    @wraps(func)
-    def decorator(*args, **kwargs):
-        userdb = UserDB()
-        if not userdb.is_admin(session['email']):
-            abort(403)
-        return func(*args, **kwargs)
-
-    return decorator
-
-
 # Decorator function to render error pages given name & description
 def error_page(func):
     @wraps(func)
@@ -98,7 +86,7 @@ def login_page():
             error = 'The credentials you have entered are incorrect. Please try again.'
 
     if session.get('email', None):  # If user is already logged in
-        return redirect(url_for("buyer_dashboard"))  # TODO decide the landing page
+        return redirect(url_for("buyer_dashboard"))
 
     #  Login page is opened (GET request) or login form submitted with invalid credentials
     return render_template('login.html', error=error, next=request.form.get('next', ""))
@@ -185,7 +173,7 @@ def reset_password(reset_id: int):
         return redirect(url_for("buyer_dashboard", alert="Your password has been successfully changed."))
 
 
-@app.route("/change_password", methods=['GET', 'POST'])
+@app.route("/profile/edit", methods=['GET', 'POST'])
 @login_required
 def change_password():
     if request.method == "GET":  # User opening the webpage

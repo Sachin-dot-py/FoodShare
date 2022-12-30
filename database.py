@@ -198,24 +198,6 @@ class UserDB(MySQL):
         """
         self._delete("users", {"email": email.lower()})
 
-    def is_admin(self, email: str) -> bool:
-        """ Checks if a user is an admin in the database.
-
-        Args:
-            email: The email address of the user.
-
-        Returns:
-            True if the user is an admin, False otherwise.
-
-        Raises:
-            ValueError: If the account does not exist.
-        """
-        user = self.get_user(email)
-        if not user:
-            raise ValueError("The user does not exist.")
-
-        return user.get("admin", False)
-
     def generate_reset_id(self, email: str) -> int:
         """ Returns an id associated with a user to reset their password given their email address.
 
