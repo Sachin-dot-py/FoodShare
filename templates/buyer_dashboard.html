@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Explore Restaurants - FoodShare</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <div class="navbar">
@@ -20,13 +21,19 @@
     <a href="/restaurants/{{ restaurant.restid }}">
         <img src="/uploads/{{ restaurant.coverpic }}" height="75" width="75">
         <h3>{{ restaurant.name }}</h3>
-        <br>
-        {% if restaurant.average_rating %}
-        {{ "⭐️" * int(restaurant.average_rating) }} {{ restaurant.average_rating }}
-        {% endif %}
-        {{ restaurant.distance }} m away
-        <br>
     </a>
+    {% if restaurant.avgreview %}
+        {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|int }}
+        {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|int) }}
+        {{ restaurant.avgreview }} stars
+        <br>
+    {% endif %}
+    {% if restaurant.distance >= 1000 %}
+        {{ "%.1f"|format(restaurant.distance / 1000) }} km away
+    {% else %}
+        {{ restaurant.distance|round(-1, 'ceil')|int }} m away
+    {% endif %}
+        <br>
 </div>
 {% if restaurant == restaurant[8] %}
 <h1>Other Restaurants</h1>

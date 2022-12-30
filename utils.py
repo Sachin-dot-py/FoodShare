@@ -91,10 +91,10 @@ class ORS:
             "/v2/matrix/foot-walking",
             data={
                 'locations': [coord1, coord2],
-                'metrics': ["distance"]
+                'metrics': ["distance"],
+                'units': "m"
             }
         )
-
-        distance = result['distances'][0][0] or result['distances'][0][1]
+        distance = result['distances'][0][1] or result['distances'][1][0]
         
-        return distance
+        return int(distance)

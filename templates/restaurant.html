@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <title>{{ restaurant.name }} - FoodShare</title>
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-
+.checked {
+  color: orange;
+}
 
 #snackbar {
   visibility: hidden;
@@ -81,11 +84,18 @@
 </div>
 <img src="/uploads/{{ restaurant.coverpic }}" height="250" width="250">
 <h3>{{ restaurant.name }}</h3>
-<h5>{{ restaurant.address.name }}</h5>
-{% if restaurant.average_rating %}
-{{ "⭐️" * int(restaurant.average_rating) }} {{ restaurant.average_rating }}
+<h5>{{ restaurant.address }}</h5>
+{% if restaurant.avgreview %}
+        {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|int }}
+        {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|int) }}
+        {{ restaurant.avgreview }} stars
+        <br>
 {% endif %}
-{{ restaurant.distance }} km away
+{% if restaurant.distance >= 1000 %}
+        {{ "%.1f"|format(restaurant.distance / 1000) }} km away
+    {% else %}
+        {{ restaurant.distance|round(-1, 'ceil')|int }} m away
+    {% endif %}
 <br>
 {% for row in restaurant.menu %}
 <div class="row">
