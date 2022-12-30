@@ -8,36 +8,55 @@
 </head>
 <body>
 <div class="navbar">
+<!-- FoodShare Logo -->
+<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
+</a>
   <a href="/">Home</a>
   <a href="/login" class="active">Login</a>
   <a href="/sign_up">Sign Up</a>
   <a href="/contact_us">Contact Us</a>
 </div>
-<form method="POST" action="/login">
+<br><br>
+<center>
+<div class="card">
+  <h1>Login to FoodShare</h1>
+  <div class="container">
+    <form method="POST" action="/login">
     {% if error %}
-        <p>{{ error }}</p>
+        <p style="color: red;">{{ error }}</p>
     {% endif %}
     <p><input type="hidden" name="next" value="{{ request.args.get('next', '') }}"/></p>
-    <table border=0 cellspacing=10>
+    <table border=0 cellspacing=10 align="center" style="text-align: left;">
         <tr>
             <td>Email:</td>
-            <td><input type="email" name="email" required autofocus></td>
+            <td><input type="email" name="email" required autofocus size="30"></td>
         </tr>
         <tr>
             <td>Password:</td>
-            <td><input type="password" name="password" required></td>
+            <td><input type="password" name="password" required size="30"></td>
         </tr>
         <tr>
             <td colspan="2"><input type="checkbox" name="keep_me_logged_in" checked> Keep me Logged In</td>
         </tr>
         <tr>
-            <td colspan="2"><button type="submit">Sign In</button></td>
+            <td colspan="2" style="text-align: center;"><button type="submit" class="button hovereffect">Sign In</button></td>
         </tr>
         <tr>
-            <td><a href="{{ url_for('sign_up_page') }}">Sign Up</a></td>
-            <td><a href="{{ url_for('reset_password_page') }}">Reset your password</a></td>
+            <td style="text-align: center;"><a href="{{ url_for('sign_up_page') }}">Sign Up</a></td>
+            <td style="text-align: center;"><a href="{{ url_for('reset_password_page') }}">Reset Password</a></td>
         </tr>
     </table>
 </form>
+  </div>
+</div>
+    </center>
+<div id="snackbar"></div>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+{% if alert %}
+<script>
+    notify("{{ alert }}");
+</script>
+{% endif %}
 </body>
 </html>

@@ -8,28 +8,37 @@
 </head>
 <body>
 <div class="navbar">
+<!-- FoodShare Logo -->
+<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
+</a>
   <a href="/">Home</a>
   <a href="/login">Login</a>
   <a href="/sign_up" class="active">Sign Up</a>
   <a href="/contact_us">Contact Us</a>
 </div>
+<br><br>
+<center>
+<div class="card">
+  <h1>Sign Up for FoodShare</h1>
+  <div class="container">
 <form method="POST" action="/sign_up" onsubmit="return validateForm();">
     {% if error %}
-        <p>{{ error }}</p>
+        <p style="color: red;">{{ error }}</p>
     {% endif %}
-    <h3>All fields marked with an asterisk (<font color=red><sup>*</sup></font>) are required</h3>
-    <table border=0 cellspacing=10>
+    <p style="text-align: left;">All fields are required.</p>
+    <table border=0 cellspacing=10 align="center" style="text-align: left;">
         <tr>
             <td><font color=red><sup>*</sup></font>First Name:</td>
-            <td><input type="text" name="fname" required autofocus></td>
+            <td><input type="text" name="fname" size="50" required autofocus></td>
         </tr>
         <tr>
             <td><font color=red><sup>*</sup></font>Last Name:</td>
-            <td><input type="text" name="lname" required></td>
+            <td><input type="text" name="lname" size="50" required></td>
         </tr>
         <tr>
             <td><font color=red><sup>*</sup></font>Email:</td>
-            <td><input type="email" name="email" required></td>
+            <td><input type="email" name="email" size="50" required></td>
         </tr>
         <tr>
             <td><font color=red><sup>*</sup></font>Address:</td>
@@ -75,12 +84,22 @@
             <td><input type="password" name="repassword" required onkeyup='checkMatchingPasswords();'> &nbsp;&nbsp;<span id="passmatchvalidate"></span></td>
         </tr>
         <tr>
-            <td colspan="2"><button type="submit">Sign Up</button></td>
+            <td colspan="2" style="text-align: center;"><button type="submit" class="button greenhovereffect">Sign Up</button></td>
         </tr>
         <tr>
             <td colspan="2">Already have an account? <a href="{{ url_for('login_page') }}">Log in.</a></td>
         </tr>
     </table>
 </form>
+      </div>
+</div>
+    </center>
+<div id="snackbar"></div>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+{% if alert %}
+<script>
+    notify("{{ alert }}");
+</script>
+{% endif %}
 </body>
 </html>

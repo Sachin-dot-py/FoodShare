@@ -65,7 +65,7 @@ def home_page():
     if logged_in:
         return redirect(url_for("buyer_dashboard"))
     else:
-        return render_template("home.html")
+        return render_template("home.html", alert=request.args.get("alert"))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -191,13 +191,13 @@ def change_password():
 def logout_page():
     session.pop('email', None)
     session.pop('userid', None)
-    return redirect(url_for('home_page'))
+    return redirect(url_for('home_page', alert="You have been logged out."))
 
 
 @app.route('/contact_us', methods=["GET", "POST"])
 def contact_us():
     if request.method == "GET":
-        return render_template("contact_us.html")
+        return render_template("contact_us.html", signed_in=bool(session.get('email')))
     else:
         ContactFormResponsesDB().add_response(dict(request.form) | {'submittedat': time.time()})
         message = CONTACT_US_RESPONSE.format(fname=request.form['fname'], lname=request.form['lname'],

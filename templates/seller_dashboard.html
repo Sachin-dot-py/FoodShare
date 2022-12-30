@@ -68,6 +68,17 @@ input:checked + .slider:before {
 </style>
 </head>
 <body>
+<div class="navbar">
+<!-- FoodShare Logo -->
+<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
+</a>
+<a href="{{  url_for('seller_dashboard') }}" class="active">My Orders</a>
+<a href="{{  url_for('edit_restaurant') }}">Edit Restaurant/Menu</a>
+<a href="/reviews/view/{{ restaurant.restid }}">My Restaurant Reviews</a>
+<a href="{{  url_for('logout_page') }}" class="split">Logout</a>
+<a href="{{  url_for('buyer_dashboard') }}" class="split">Switch to Buyer View</a>
+</div>
 <h2>Accept New Orders: &nbsp; </h2>
 <label class="switch">
   <input type="checkbox" id="acceptorders" onclick="toggleNewOrders();" {{ "checked" if restaurant.open }}>

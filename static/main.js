@@ -1,4 +1,4 @@
-/* Password validation and sign up, reset password form validation: */
+/* Form validation for sign up, change password, reset password: */
 
 // Checks if a given strings contains special characters
 function containsSpecialChars(string){
@@ -130,8 +130,7 @@ function toggleShowPassword(){
     }
 }
 
-// Autocompleting address
-
+/* Autocompleting Address */
 
 async function getSuggestions(text){
     base_url = window.location.origin
@@ -180,6 +179,7 @@ async function autocompleteAddress(text){
     }
 }
 
+/* Snackbar Notifications */
 const snackbar = document.getElementById("snackbar");
 function notify(notification) {
   snackbar.innerHTML = notification;

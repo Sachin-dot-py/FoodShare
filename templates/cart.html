@@ -4,8 +4,22 @@
     <meta charset="UTF-8">
     <title>Cart - FoodShare</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+<div class="navbar">
+<!-- FoodShare Logo -->
+<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
+</a>
+<a href="{{  url_for('buyer_dashboard') }}">Restaurants</a>
+<a href="{{  url_for('change_password') }}">Edit Profile</a>
+<a href="{{ url_for('buyer_orders') }}">My Orders</a>
+<a href="{{ url_for('view_cart') }}" class="active"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
+<a href="/contact_us">Contact FoodShare</a>
+<a href="{{  url_for('logout_page') }}" class="split">Logout</a>
+<a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View</a>
+</div>
 {% if cart %}
 Purchasing from:
 <br>
