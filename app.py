@@ -184,7 +184,7 @@ def change_password():
         db.edit_user(user['email'], unhashed_password=request.form['password'])
         message = CHANGE_PASS_NOTIF.format(fname=user['fname'], SUPPORT_EMAIL=SUPPORT_EMAIL)
         send_email("Your password has been changed", message, COMMS_EMAIL, [user['email']])
-        return redirect(url_for("home_page"))  # TODO Change this when the profile/settings page is made
+        return redirect(url_for("change_password", alert="Your password has been changed."))
 
 
 @app.route('/logout', methods=['GET'])
