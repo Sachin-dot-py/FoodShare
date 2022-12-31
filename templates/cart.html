@@ -12,13 +12,13 @@
 <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
 <img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
 </a>
-<a href="{{  url_for('buyer_dashboard') }}">Restaurants</a>
-<a href="{{  url_for('change_password') }}">Edit Profile</a>
-<a href="{{ url_for('buyer_orders') }}">My Orders</a>
+<a href="{{  url_for('buyer_dashboard') }}"><i class="fa fa-cutlery"></i> &nbsp;Restaurants</a>
+<a href="{{  url_for('change_password') }}"><i class="fa fa-edit"></i> &nbsp;Edit Profile</a>
+<a href="{{ url_for('buyer_orders') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
 <a href="{{ url_for('view_cart') }}" class="active"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
-<a href="/contact_us">Contact FoodShare</a>
-<a href="{{  url_for('logout_page') }}" class="split">Logout</a>
-<a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View</a>
+<a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact FoodShare</a>
+<a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
+<a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
 </div>
 {% if cart %}
 Purchasing from:
