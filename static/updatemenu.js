@@ -31,8 +31,15 @@ const openModal = function () {
 
 const modalDeleteFoodItem = function () {
     let modalitemid = document.getElementById("modalitemid");
-    modalForm.action = "/fooditem/delete";
-    modalForm.submit();
+    if(modalitemid.value=="") {
+    // For add food item
+        closeModal();
+    }
+    else{
+    // for edit/delete food item
+        modalForm.action = "/fooditem/delete";
+        modalForm.submit();
+    }
 }
 
 const addEditFoodItem = function (itemid=null, name=null, description=null, price=null, restrictions=null) {

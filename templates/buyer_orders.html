@@ -9,35 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<section class="modal hidden">
-  <div class="flex">
-    <button class="btn-close">⨉</button>
-  </div>
-  <div>
-    <h3 class="modal-header">Add Review</h3>
-    <p>
-      Add a review of your order to provide valuable insights for other potential customers.
-    </p>
-  </div>
-    <form name="addreview" id="modaladdreviewform" method="POST" action="/reviews/add">
-        <input type="hidden" id="modalitemid" name="orderid" value="">
-        Title <input type="text" name="title" id="modaltitle" required>
-        <br>
-        Description <input type="text" name="description" id="modaldesc" required>
-        <br>
-        Stars <input type="hidden" name="stars" id="modalstars" value=0 required>
-        <span class="fa fa-star" id="modalstar1" onclick="modalSetStars(1);"></span>
-        <span class="fa fa-star" id="modalstar2" onclick="modalSetStars(2);"></span>
-        <span class="fa fa-star" id="modalstar3" onclick="modalSetStars(3);"></span>
-        <span class="fa fa-star" id="modalstar4" onclick="modalSetStars(4);"></span>
-        <span class="fa fa-star" id="modalstar5" onclick="modalSetStars(5);"></span>
-
-        <button type="submit" class="btn">Save</button>
-</form>
-
-</section>
-
-<div class="overlay hidden"></div>
 <div class="navbar">
 <!-- FoodShare Logo -->
 <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
@@ -51,8 +22,55 @@
 <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
 <a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
 </div>
+<center>
+<div style="display: flex; justify-content: center;">
+<section class="modal hidden">
+  <div class="flex">
+    <button class="btn-close">⨉</button>
+  </div>
+  <div>
+    <h3 class="modal-header">Add Review</h3>
+    <p>
+      Add a review of your order to provide valuable insights for other potential customers.
+    </p>
+  </div>
+    <table border="0" align="center" style="text-align: center;">
+    <form name="addreview" id="modaladdreviewform" method="POST" action="/reviews/add">
+
+        <input type="hidden" id="modalitemid" name="orderid" value="">
+        <tr>
+            <td style="text-align: left;">Title</td>
+            <td><input type="text" name="title" id="modaltitle" required size="35"></td>
+        </tr>
+        <tr>
+        <td style="text-align: left;">Description</td>
+            <td><textarea name="description" id="modaldesc" required style="resize: none; height:100px; width: 290px;"></textarea></td>
+        </tr>
+        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr>
+            <td style="text-align: left;">Stars</td>
+            <td style="padding: 4px;">
+                <input type="hidden" name="stars" id="modalstars" value=0 required>
+        <span class="fa fa-star" id="modalstar1" onclick="modalSetStars(1);" style="cursor:pointer;"></span>
+        <span class="fa fa-star" id="modalstar2" onclick="modalSetStars(2);" style="cursor:pointer;"></span>
+        <span class="fa fa-star" id="modalstar3" onclick="modalSetStars(3);" style="cursor:pointer;"></span>
+        <span class="fa fa-star" id="modalstar4" onclick="modalSetStars(4);" style="cursor:pointer;"></span>
+        <span class="fa fa-star" id="modalstar5" onclick="modalSetStars(5);" style="cursor:pointer;"></span>
+            </td>
+        </tr>
+        <tr><td colspan="2">&nbsp;</td></tr>
+
+        <tr>
+        <td colspan="2"><button type="submit" class="btn" style="width: 100%;">Save</button></td>
+        </tr>
+</form>
+        </table>
+</section>
+</div>
+<div class="overlay hidden"></div>
+
 <h1>Pending Orders</h1>
-<table>
+<table class="tables">
     <tr>
         <th>Restaurant</th>
         <th>Date</th>
@@ -69,16 +87,19 @@
         <td>{{ order.date }}</td>
         <td>{{ order.time }}</td>
         <td>${{ order.amount }}</td>
-        <td>{{ order.orderstatus }}</td>
-        <td colspan="2"><button onclick="cancelOrder({{ order.orderid }});">Cancel Order</button></td>
-        <td><button onclick="window.open('/orders/invoice/{{ order.orderid }}','_blank','resizable=yes');">Invoice</button></td>
+        <td><b>{{ order.orderstatus }}</b></td>
+        <td colspan="2" style="padding: 0px; margin: 0px;">
+                <button class="button tablebutton" style="vertical-align:middle" onclick="cancelOrder({{ order.orderid }});"><span>Cancel Order </span>
+                </button>
+            </td>
+        <td><a href="/orders/invoice/{{ order.orderid }}" target="_blank"><i class="fa fa-file-text-o" style="font-size:20px"></i></a></td>
     </tr>
     {% endif %}
     {% endfor %}
 </table>
 <br>
 <h1>Completed Orders</h1>
-<table>
+<table class="tables">
     <tr>
         <th>Restaurant</th>
         <th>Date</th>
@@ -95,7 +116,11 @@
         <td>{{ order.time }}</td>
         <td>${{ order.amount }}</td>
             {% if order.review == none %}
-        <td colspan="2" id="{{ order.orderid }}reviewbtn"><button onclick="openAddReviewModal({{ order.orderid }});">Add Review</button></td>
+            <td colspan="2" id="{{ order.orderid }}reviewbtn" style="padding: 0px; margin: 0px;">
+                <button class="button tablebutton" style="vertical-align:middle" onclick="openAddReviewModal({{ order.orderid }});"><span>Add Review </span>
+                </button>
+            </td>
+<!--        <td colspan="2" id="{{ order.orderid }}reviewbtn"><button onclick="openAddReviewModal({{ order.orderid }});">Add Review</button></td>-->
             {% else %}
         <td colspan="2" id="{{ order.orderid }}reviewbtn">
             {% for i in range(order.review) %}
@@ -106,12 +131,14 @@
             {% endfor %}
         </td>
             {% endif %}
-        <td><button onclick="window.open('/orders/invoice/{{ order.orderid }}','_blank','resizable=yes');">Invoice</button></td>
+<!--        <td><button onclick="window.open('/orders/invoice/{{ order.orderid }}','_blank','resizable=yes');">Invoice</button></td>-->
+            <td><a href="/orders/invoice/{{ order.orderid }}" target="_blank"><i class="fa fa-file-text-o" style="font-size:20px"></i></a></td>
     </tr>
     {% endif %}
     {% endfor %}
 </table>
 <div id="snackbar"></div>
+</center>
 <script src="{{ url_for('static', filename='buyer.js') }}"></script>
 {% if alert %}
 <script>

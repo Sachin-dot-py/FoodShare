@@ -67,7 +67,7 @@ function markOrderReady(orderid) {
             notify("Order marked as ready!");
             // Change button to "Mark as Collected"
             let order = document.getElementById(orderid.toString() + "button");
-            order.innerHTML = '<button onclick="markOrderCollected('+orderid+');">Mark as Collected</button>';
+            order.innerHTML = '<button class="button tablebutton" style="vertical-align:middle" type="button" onclick="markOrderCollected('+orderid.toString()+');"><span>Mark as Collected</span></button>';
         },
         failure: function (data) {
             notify("Error while marking order as ready.");

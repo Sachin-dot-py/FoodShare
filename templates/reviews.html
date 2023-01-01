@@ -57,7 +57,7 @@
         </h3>
         <p>{{ review.description }}</p>
         <p>{{ (review.userid|fetch_user).fname }} {{( review.userid|fetch_user).lname }} on {{ review.submittedat|format_date }}</p>
-        <p><a href="/orders/invoice/{{ review.orderid }}">View this order.</a></p>
+        <p><a href="/orders/invoice/{{ review.orderid }}" target="_blank">View this order.</a></p>
     </div>
 {% endfor %}
 </body>

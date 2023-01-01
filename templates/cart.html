@@ -20,16 +20,20 @@
 <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
 <a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
 </div>
+<center>
 {% if cart %}
-Purchasing from:
-<br>
-{{ restaurant.name }}
-<br>
-{{ restaurant.address.replace("\n", "<br>") }}
 <br><br>
+    <div class="card">
+  <h1>Purchasing from {{ restaurant.name }}</h1>
+  <div class="container" style="text-align: left;">
+      <b>{{ restaurant.name }}</b>,
+      <br>
+{{ restaurant.address.replace("\n", "<br>") }}
+  </div>
+    </div>
 <h1>Order Summary</h1>
 <br>
-<table border=1 cellspacing=0>
+<table cellspacing=0 class="tables">
     <tr>
         <th>Item</th>
         <th>Quantity</th>
@@ -44,18 +48,30 @@ Purchasing from:
             <td>${{ "%.2f"|format(item.total) }}</td>
         </tr>
     {% endfor %}
+    <tr>
+        <td colspan=3 style="text-align: right;"><b>TOTAL</b></td>
+        <td>${{ "%.2f"|format(total) }}</td>
+    </tr>
+    <tr>
+        <form method="POST" action="/cart/submit">
+        <td style="padding: 0px; margin: 0px;" colspan="2"> <button type="submit" name="action" value="checkout" class="button tablebutton"><span>Checkout </span></button></td>
+        <td style="padding: 0px; margin: 0px;" colspan="2"><button type="submit" name="action" value="clear" class="button tablebutton" style="background-color: #f44336;"><span>Clear Cart </span></button></td>
+        </form>
+    </tr>
 </table>
-<br>
-Total: ${{ "%.2f"|format(total) }}
+
 <br><br>
-<form method="POST" action="/cart/submit">
-    <button type="submit" name="action" value="checkout">Checkout</button>
-    <button type="submit" name="action" value="clear">Clear Cart</button>
-</form>
 {% else %}
-    <p>Your cart is empty. Go <a href="/restaurants">add some items</a></p>
+    <br><br>
+    <div class="card">
+  <h1>Your cart is empty.</h1>
+  <div class="container" style="text-align: left;">
+      <p>Your cart is empty. Go <a href="/restaurants">add some items</a> from our variety of restaurants.</p>
+  </div>
+    </div>
 {% endif %}
 <div id="snackbar"></div>
+    </center>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% if alert %}
 <script>

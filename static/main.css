@@ -154,6 +154,50 @@
   background-color: white;
   color: black;
 }
+
+.redhovereffect {
+  background-color: #f44336;
+  color: white;
+  border: 2px solid #f44336;
+}
+
+.redhovereffect:hover {
+  background-color: white;
+  color: black;
+}
+
+.tablebutton{
+background-color: #555555;
+  padding: 8.5px 4px;
+  margin: 1px 1px;
+  width:100%;
+  height:100%;
+}
+
+.tablebutton span{
+    cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.tablebutton span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.8s;
+}
+
+.tablebutton:hover span {
+  padding-right: 8px;
+}
+
+.tablebutton:hover span:after {
+  opacity: 1;
+  right: -5px;
+}
 /* End of Buttons */
 
 /* Links - Used in Login Page */
@@ -223,3 +267,28 @@ input[type=text]:focus,input[type=email]:focus,input[type=password]:focus,input[
   border: 3px solid #555;
 }
 /* End Forms */
+/* Tables */
+.tables {
+  border-collapse: collapse;
+  width: 50%;
+}
+
+.tables td, .tables th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.tables tr:nth-child(even){background-color: #f2f2f2;}
+
+/* .tables tr:hover {background-color: #ddd;} */
+
+.tables th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+  text-align: center;
+}
+/* End Tables */
