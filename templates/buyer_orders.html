@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>My Orders - FoodShare</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='secondary.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='updatemenu.css') }}">
+
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -40,7 +41,7 @@
         <input type="hidden" id="modalitemid" name="orderid" value="">
         <tr>
             <td style="text-align: left;">Title</td>
-            <td><input type="text" name="title" id="modaltitle" required size="35"></td>
+            <td><input type="text" name="title" id="modaltitle" required size="37"></td>
         </tr>
         <tr>
         <td style="text-align: left;">Description</td>
@@ -139,7 +140,7 @@
 </table>
 <div id="snackbar"></div>
 </center>
-<script src="{{ url_for('static', filename='buyer.js') }}"></script>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
 {% if alert %}
 <script>
     notify("{{ alert }}");

@@ -266,6 +266,7 @@ input[type=text]:focus,input[type=email]:focus,input[type=password]:focus,input[
   border: 3px solid #555;
 }
 /* End Forms */
+
 /* Tables */
 .tables {
   border-collapse: collapse;
@@ -309,6 +310,7 @@ ul.breadcrumb li+li:before {
 
 ul.breadcrumb li a {color: green;}
 /* End Breadcrumb Pagination */
+
 /* Reviews */
 .reviewbox {
   border: 2px solid #ccc;
@@ -323,6 +325,7 @@ ul.breadcrumb li a {color: green;}
   margin-right: 15px;
 }
 /* End Reviews */
+
 /* View Restaurant */
 .restaurantviewcontainer {
   display: flex;

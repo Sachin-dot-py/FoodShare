@@ -53,9 +53,9 @@
 No reviews yet. Check back later after customers have left you reviews.
 {% endif %}
 {% for review in reviews %}
-    <div class="review reviewbox">
-        {{ '&nbsp;<i class="fa fa-star checked"></i>'|safe * review.stars|round|int }}
-        {{ '<i class="fa fa-star"></i>&nbsp;'|safe * (5-review.stars|round|int) }}
+    <div class="review reviewbox" style="text-align: left;">
+        {{ '&nbsp;<i class="fa fa-star checked" style="font-size: 24px;"></i>'|safe * review.stars|round|int }}
+        {{ '<i class="fa fa-star" style="font-size: 24px;"></i>&nbsp;'|safe * (5-review.stars|round|int) }}
         &nbsp; <span>{{ review.title }}</span>
         <p>{{ review.description }}</p>
         <p><i>{{ (review.userid|fetch_user).fname }} {{( review.userid|fetch_user).lname }}</i> on <i>{{ review.submittedat|format_date }}</i></p>

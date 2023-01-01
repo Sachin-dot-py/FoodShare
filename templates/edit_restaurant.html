@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Update Menu - FoodShare</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='updatemenu.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='secondary.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
@@ -146,9 +146,9 @@
     <br>
 <button class="addfooditem button greenhovereffect" onclick="addEditFoodItem();" style="padding:12px 20px;">Add Food Item</button>
 <div id="snackbar"></div>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
     <br><br><br>
 </center>
-<script src="{{ url_for('static', filename='updatemenu.js') }}"></script>
 {% if alert %}
 <script>
     notify("{{ alert }}");
