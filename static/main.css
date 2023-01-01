@@ -111,7 +111,6 @@
 }
 /* End Miscellanous */
 
-
 /* Single Card Interface Design (login, sign up, etc.) */
 
 .card {
@@ -129,7 +128,7 @@
 
 /* End of Card Design */
 
-/* Buttons - Used in Login Page */
+/* Buttons */
 .button {
   background-color: #4CAF50;
   border: none;
@@ -200,7 +199,7 @@ background-color: #555555;
 }
 /* End of Buttons */
 
-/* Links - Used in Login Page */
+/* Links */
 a:link {
   color: #008CBA; /* Blue */
 }
@@ -281,7 +280,7 @@ input[type=text]:focus,input[type=email]:focus,input[type=password]:focus,input[
 
 .tables tr:nth-child(even){background-color: #f2f2f2;}
 
-/* .tables tr:hover {background-color: #ddd;} */
+.tables tr:hover {background-color: #ddd;}
 
 .tables th {
   padding-top: 12px;

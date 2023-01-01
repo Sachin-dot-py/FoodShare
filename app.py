@@ -2,6 +2,7 @@
 import os
 import re
 import time
+import logging
 from functools import wraps
 from datetime import datetime
 
@@ -18,6 +19,8 @@ from secret_config import FLASK_SECRET_KEY, GOOGLE_API_KEY
 app = Flask(__name__)
 app.secret_key = FLASK_SECRET_KEY
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1000 * 1000  # Limiting uploads to 8 megabytes
+
+logging.basicConfig(filename='FoodShare.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s : %(message)s')
 
 
 @app.template_filter()
@@ -127,25 +130,25 @@ def sign_up_page():
                 error = "Please fill in all the fields correctly according to the provided instructions."
 
     #  Sign up page is opened (GET request) or signup form submitted with existing account
-    return render_template("signup.html", error=error)
+    return render_template("sign_up.html", error=error)
 
 
 @app.route('/reset_password', methods=["GET", "POST"])
 def reset_password_page():
     if request.method == "GET":  # User opening the webpage
-        return render_template("reset_password.html", stage=1)  # Render form with email address
+        return render_template("change_reset_password.html", stage=1)  # Render form with email address
     else:  # Submitting the form with the email address
         db = UserDB()
         user = db.get_user(request.form['email'])
         if not user:  # Invalid email address
             error = "The email address provided does not match any existing accounts." \
                     "Please create a new account or try another email address."
-            return render_template("reset_password.html", stage=1, error=error)
+            return render_template("change_reset_password.html", stage=1, error=error)
         reset_id = db.generate_reset_id(request.form['email'])
         link = f"{WEBSITE_BASE_URL}/reset_password/{reset_id}"
         content = RESET_PASSWORD_TEMPLATE.format(fname=user['fname'], link=link, SUPPORT_EMAIL=SUPPORT_EMAIL)
         send_email("Reset your password", content, COMMS_EMAIL, [request.form['email']])
-        return render_template("reset_password.html", stage=2)  # Message informing user to check their email
+        return render_template("change_reset_password.html", stage=2)  # Message informing user to check their email
 
 
 @app.route('/reset_password/<int:reset_id>', methods=["GET", "POST"])
@@ -158,8 +161,8 @@ def reset_password(reset_id: int):
         if user['reset_expiry'] < time.time():  # Reset ID has expired
             db.delete_reset_id(reset_id)
             error = "We're sorry, but your reset link has expired. Please generate a new one below to continue."
-            return render_template("reset_password.html", stage=1, error=error)  # Redirect back to first stage
-        return render_template("reset_password.html", stage=3, reset_id=reset_id,
+            return render_template("change_reset_password.html", stage=1, error=error)  # Redirect back to first stage
+        return render_template("change_reset_password.html", stage=3, reset_id=reset_id,
                                fname=user['fname'])  # Render form with email address
     else:  # Submitting the form with the email address
         db = UserDB()
@@ -176,7 +179,7 @@ def reset_password(reset_id: int):
 @login_required
 def change_password():
     if request.method == "GET":  # User opening the webpage
-        return render_template("reset_password.html", alert=request.args.get("alert"), change_password=True)
+        return render_template("change_reset_password.html", alert=request.args.get("alert"), change_password=True)
     else:  # Form submitted
         db = UserDB()
         user = db.get_user(session['email'])
@@ -526,7 +529,7 @@ def edit_restaurant():
         rdb = RestaurantsDB()
         if restaurant := rdb.get_restaurant(userid=session['userid']):  # User has set up their restaurant
             fooditems = FoodItemsDB().fetch_items(restaurant['restid'])
-            return render_template("updatemenu.html", restaurant=restaurant, fooditems=fooditems,
+            return render_template("edit_restaurant.html", restaurant=restaurant, fooditems=fooditems,
                                    alert=request.args.get('alert'))
         else:
             return redirect(url_for("setup_restaurant"))
