@@ -145,7 +145,7 @@
             <tr>
                 <td>{{ item.name }}</td>
                 <td>{{ item.description }}</td>
-                <td>${{ item.price }}</td>
+                <td>${{ "%.2f"|format(item.price) }}</td>
                 <td><img src="/uploads/{{ item.picture }}" height="25" width="50"></td>
                 <td>{{ ", ".join(item.restrictions) }}</td>
                 <td>

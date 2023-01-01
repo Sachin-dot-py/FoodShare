@@ -83,7 +83,7 @@
             <div class="multicard">
                 <img src="/uploads/{{ item.picture }}" width=100% height=200px style="object-fit:scale-down;">
                 <h3>{{ item.name }}</h3>
-                <p><b>${{ item.price }}</b></p>
+                <p><b>${{ "%.2f"|format(item.price) }}</b></p>
                 <p>{{ item.description }}</p>
                 {% if item.restrictions != [''] %}
                 <p>Contains {{ ", ".join(item.restrictions) }}</p>

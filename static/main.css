@@ -353,3 +353,9 @@ ul.breadcrumb li a {color: green;}
     text-align: center;
 }
 /* End Buyer Dashboard */
+
+/* Overall Aesthetic (Colors and Font) */
+body {
+  font-family: Rockwell, Georgia, Roboto, Arial, sans-serif;
+}
+/* End Overall Aesthetic (Colors and Font) */

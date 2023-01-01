@@ -98,7 +98,7 @@
             <td><a href="/restaurants/{{ order.restaurant.restid }}">{{ order.restaurant.name }}</a></td>
             <td>{{ order.date }}</td>
             <td>{{ order.time }}</td>
-            <td>${{ order.amount }}</td>
+            <td>${{ "%.2f"|format(order.amount) }}</td>
             <td><b>{{ order.orderstatus }}</b></td>
             <td colspan="2" style="padding: 0px; margin: 0px;">
                 <button class="button tablebutton" style="vertical-align:middle"
@@ -127,7 +127,7 @@
             <td><a href="/restaurants/{{ order.restaurant.restid }}">{{ order.restaurant.name }}</a></td>
             <td>{{ order.date }}</td>
             <td>{{ order.time }}</td>
-            <td>${{ order.amount }}</td>
+            <td>${{ "%.2f"|format(order.amount) }}</td>
             {% if order.review == none %}
             <td colspan="2" id="{{ order.orderid }}reviewbtn" style="padding: 0px; margin: 0px;">
                 <button class="button tablebutton" style="vertical-align:middle"
