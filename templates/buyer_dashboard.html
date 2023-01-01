@@ -22,7 +22,7 @@
 </div>
 <h1>Restaurants Near You</h1>
 {% for restaurant in restaurants %}
-{% if restaurant.distance <= 500 %}  <!-- If restaurant is nearby -->
+{% if restaurant.distance <= 750 %}  <!-- If restaurant is nearby -->
 <div class="restaurant">
     <a href="/restaurants/{{ restaurant.restid }}">
         <img src="/uploads/{{ restaurant.coverpic }}" height="75" width="75">
@@ -45,7 +45,7 @@
 {% endfor %}
 <h1>Other Restaurants</h1>
 {% for restaurant in restaurants %}
-{% if restaurant.distance > 500 %}  <!-- If restaurant is NOT nearby -->
+{% if restaurant.distance > 750 %}  <!-- If restaurant is NOT nearby -->
 <div class="restaurant">
     <a href="/restaurants/{{ restaurant.restid }}">
         <img src="/uploads/{{ restaurant.coverpic }}" height="75" width="75">

@@ -1,12 +1,44 @@
 <!doctype html>
 <html>
 <head>
-  <link rel="stylesheet" href="{{ url_for('static', filename='errorpage.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
   <title>{{ error }} - {{ name }}</title>
 </head>
 <body>
-  <h1>{{ error }} - {{ name }}</h1>
+{% if logged_in %}
+<div class="navbar">
+<!-- FoodShare Logo -->
+<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
+</a>
+<a href="{{  url_for('buyer_dashboard') }}"><i class="fa fa-cutlery"></i> &nbsp;Restaurants</a>
+<a href="{{  url_for('change_password') }}" class="active"><i class="fa fa-edit"></i> &nbsp;Edit Profile</a>
+<a href="{{ url_for('buyer_orders') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
+<a href="{{ url_for('view_cart') }}"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
+<a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact FoodShare</a>
+<a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
+<a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
+</div>
+{% else %}
+<div class="navbar">
+<!-- FoodShare Logo -->
+<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
+</a>
+  <a href="/"><i class="fa fa-home"></i> &nbsp;Home</a>
+  <a href="/login"><i class="fa fa-sign-in"></i> &nbsp; Login</a>
+  <a href="/sign_up"><i class="fa fa-pencil"></i> &nbsp;Sign Up</a>
+  <a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact Us</a>
+</div>
+{% endif %}
+<br><br>
+<center>
+<div style="text-align: center; max-width: 50%; background-color: lightblue; border: 3px dashed gray; padding: 6px; margin: 3px;">
+
+  <h1>{{ error }}: {{ name }}</h1>
   <h2>{{ description }}</h2>
-  <h3><a href="/">Go back to the home page</a></h3>
+  <h3><a href="/">Go to the home page</a></h3>
+</div>
+  </center>
 </body>
 </html>

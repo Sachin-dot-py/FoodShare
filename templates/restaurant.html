@@ -92,7 +92,8 @@
 </ul>
 <div class="restaurantviewcontainer">
 <div class="card restaurantviewitem">
-    <img src="/uploads/{{ restaurant.coverpic }}" height="100" width="200" style="float: left;">
+    <div class="imagecontainer1" style="height: 100px; width: 40%; float: left;">
+    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;"></div>
   <h1>{{ restaurant.name }}</h1>
     <p style="text-align: center;">{{ restaurant.address }}</p>
   <div class="container">

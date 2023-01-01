@@ -110,7 +110,7 @@ def sign_up_page():
             if not re.search(EMAIL_REGEX, request.form['email']): valid = False  # Is provided email valid?
             if request.form['address'] == "": valid = False
             if request.form['password'] == "": valid = False
-            if request.form['password'] != request.form['confirm_password']: valid = False
+            if request.form['password'] != request.form['repassword']: valid = False
 
             if valid:
                 api = ORS()

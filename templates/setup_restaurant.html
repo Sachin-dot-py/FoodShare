@@ -3,30 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Setup Restaurant - FoodShare</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+<div class="navbar">
+<!-- FoodShare Logo -->
+<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
+</a>
+<a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
+<a href="{{  url_for('buyer_dashboard') }}" class="split">Switch to Buyer View &nbsp;<i class="fa fa-angle-double-right"></i></a>
+</div>
+<br><br>
+<center>
+    <p>To proceed, you'll need to set up your restaurant first.</p>
+<div class="card">
+
+  <h1>Setup your Restaurant</h1>
+  <div class="container">
 <form method="POST" enctype="multipart/form-data" action="{{ url_for('setup_restaurant') }}">
     {% if error %}
         <p>{{ error }}</p>
     {% endif %}
-    <h3>All fields are required.</h3>
     <table border=0 cellspacing=10>
         <tr>
             <td>Name of Restaurant:</td>
-            <td><input type="text" name="name" required autofocus></td>
+            <td><input type="text" name="name" required autofocus size="45"></td>
         </tr>
         <tr>
             <td>Address:</td>
-            <td><input type="text" name="address" required></td>
+            <td><input type="text" name="address" required size="45"></td>
         </tr>
         <tr>
-            <td>Cover Picture: (in {{ allowed_extensions }})</td>
-            <td><input type="file" name="coverpic" accept="{{ allowed_extensions }}" required> </td>
+            <td>Cover Picture:<br>({{ allowed_extensions }})</td>
+            <td style="text-align: left;"><input type="file" name="coverpic" accept="{{ allowed_extensions }}" required></td>
         </tr>
         <tr>
-            <td colspan="2"><button type="submit">Setup Restaurant</button></td>
+            <td colspan="2"><button type="submit" class="button greenhovereffect">Setup Restaurant</button></td>
         </tr>
     </table>
 </form>
+  </div></div></center>
 </body>
 </html>
