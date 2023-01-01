@@ -58,7 +58,6 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-/* Rounded sliders */
 .slider.round {
   border-radius: 34px;
 }
@@ -83,12 +82,14 @@ input:checked + .slider:before {
 <br><br>
 <center>
     <div class="card">
-  <h1>Accept New Orders: <label class="switch">
+  <h1>Accept New Orders:
+      <label class="switch">
   <input type="checkbox" id="acceptorders" onclick="toggleNewOrders();" {{ "checked" if restaurant.open }}>
   <span class="slider round"></span>
-</label></h1>
+</label>
+  </h1>
     </div>
-    <br></br>
+    <br><br>
 <h1>Pending Orders</h1>
 <table class="tables">
     <tr>
@@ -107,8 +108,7 @@ input:checked + .slider:before {
         <td>{{ order.time }}</td>
         <td>${{ "%.2f"|format(order.amount) }}</td>
          <td colspan="2" class="onlyforpending{{ order.orderid }}" style="padding: 0px; margin: 0px;">
-                <button class="button tablebutton" style="vertical-align:middle" onclick="cancelOrder({{ order.orderid }});"><span>Cancel Order </span>
-                </button>
+                <button class="button tablebutton" style="vertical-align:middle" onclick="cancelOrder({{ order.orderid }});"><span>Cancel Order </span></button>
             </td>
         <td colspan="2" class="onlyforpending{{ order.orderid }}" id="{{ order.orderid }}button" style="padding: 0px; margin: 0px;">
         {% if order.orderstatus == 'Preparing' %}

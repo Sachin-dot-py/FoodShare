@@ -31,13 +31,10 @@
   </div>
   <div>
     <h3 class="modal-header">Add Review</h3>
-    <p>
-      Add a review of your order to provide valuable insights for other potential customers.
-    </p>
+    <p>Add a review of your order to provide valuable insights for other potential customers.</p>
   </div>
     <table border="0" align="center" style="text-align: center;">
     <form name="addreview" id="modaladdreviewform" method="POST" action="/reviews/add">
-
         <input type="hidden" id="modalitemid" name="orderid" value="">
         <tr>
             <td style="text-align: left;">Title</td>
@@ -47,7 +44,9 @@
         <td style="text-align: left;">Description</td>
             <td><textarea name="description" id="modaldesc" required style="resize: none; height:100px; width: 290px;"></textarea></td>
         </tr>
-        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
         <tr>
             <td style="text-align: left;">Stars</td>
             <td style="padding: 4px;">
@@ -59,7 +58,9 @@
         <span class="fa fa-star" id="modalstar5" onclick="modalSetStars(5);" style="cursor:pointer;"></span>
             </td>
         </tr>
-        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
 
         <tr>
         <td colspan="2"><button type="submit" class="btn" style="width: 100%;">Save</button></td>
@@ -90,8 +91,7 @@
         <td>${{ order.amount }}</td>
         <td><b>{{ order.orderstatus }}</b></td>
         <td colspan="2" style="padding: 0px; margin: 0px;">
-                <button class="button tablebutton" style="vertical-align:middle" onclick="cancelOrder({{ order.orderid }});"><span>Cancel Order </span>
-                </button>
+                <button class="button tablebutton" style="vertical-align:middle" onclick="cancelOrder({{ order.orderid }});"><span>Cancel Order </span></button>
             </td>
         <td><a href="/orders/invoice/{{ order.orderid }}" target="_blank"><i class="fa fa-file-text-o" style="font-size:20px"></i></a></td>
     </tr>
@@ -118,8 +118,7 @@
         <td>${{ order.amount }}</td>
             {% if order.review == none %}
             <td colspan="2" id="{{ order.orderid }}reviewbtn" style="padding: 0px; margin: 0px;">
-                <button class="button tablebutton" style="vertical-align:middle" onclick="openAddReviewModal({{ order.orderid }});"><span>Add Review </span>
-                </button>
+                <button class="button tablebutton" style="vertical-align:middle" onclick="openAddReviewModal({{ order.orderid }});"><span>Add Review </span></button>
             </td>
 <!--        <td colspan="2" id="{{ order.orderid }}reviewbtn"><button onclick="openAddReviewModal({{ order.orderid }});">Add Review</button></td>-->
             {% else %}

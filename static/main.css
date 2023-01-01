@@ -338,3 +338,18 @@ ul.breadcrumb li a {color: green;}
   text-align: center;
 }
 /* End View Restaurant */
+/* Buyer Dashboard */
+.restaurants-flexcontainer {
+    display: flex;
+    flex-wrap: wrap;
+    flex-flow: row wrap;
+    flex-direction: row;
+}
+.restaurant {
+    margin: 10px;
+    padding: 20px;
+    width: 25%;
+    background-color: #f1f1f1;
+    text-align: center;
+}
+/* End Buyer Dashboard */

@@ -16,7 +16,6 @@
   </div>
   <div>
     <h3 class="modal-header">Add Food Item</h3>
-
   </div>
     <form name="addfooditem" id="modalform" method="POST" action="/fooditem/add" enctype="multipart/form-data">
     <table style="width:100%;">
@@ -60,8 +59,6 @@
         <tr>
             <td>&nbsp;</td>
         </tr>
-
-
         </table>
     <div>
 <button type="submit" class="btn button greenhovereffect" style="width: 48%;">Save</button>
@@ -136,8 +133,7 @@
                    {% if item.inmenu %} checked {% endif %}>
         </td>
              <td style="padding: 0px; margin: 0px;">
-                <button type="button" class="button tablebutton" style="vertical-align:middle" onclick="addEditFoodItem({{ item.itemid }}, '{{ item.name }}', '{{ item.description }}', '{{ item.price }}', '{{ ', '.join(item.restrictions) }}');"><span>Edit/Delete </span>
-                </button>
+                <button type="button" class="button tablebutton" style="vertical-align:middle" onclick="addEditFoodItem({{ item.itemid }}, '{{ item.name }}', '{{ item.description }}', '{{ item.price }}', '{{ ', '.join(item.restrictions) }}');"><span>Edit/Delete </span></button>
             </td>
         </tr>
     </form>

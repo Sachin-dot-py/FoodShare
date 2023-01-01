@@ -5,71 +5,6 @@
     <title>{{ restaurant.name }} - FoodShare</title>
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-.checked {
-  color: orange;
-}
-
-#snackbar {
-  visibility: hidden;
-  min-width: 250px;
-  margin-left: -125px;
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  border-radius: 2px;
-  padding: 16px;
-  position: fixed;
-  z-index: 1;
-  left: 50%;
-  bottom: 30px;
-  font-size: 17px;
-}
-
-#snackbar.show {
-  visibility: visible;
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-/* Float four columns side by side */
-.column {
-  float: left;
-  width: 25%;
-  padding: 0 10px;
-}
-
-/* Remove extra left and right margins, due to padding */
-.row {margin: 0 -5px;}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Responsive columns */
-@media screen and (max-width: 600px) {
-  .column {
-    width: 100%;
-    display: block;
-    margin-bottom: 20px;
-  }
-}
-
-/* Style the counter cards */
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  padding: 16px;
-  text-align: center;
-  background-color: #f1f1f1;
-}
-    </style>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
@@ -93,7 +28,8 @@
 <div class="restaurantviewcontainer">
 <div class="card restaurantviewitem">
     <div class="imagecontainer1" style="height: 100px; width: 40%; float: left;">
-    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;"></div>
+    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;">
+    </div>
   <h1>{{ restaurant.name }}</h1>
     <p style="text-align: center;">{{ restaurant.address }}</p>
   <div class="container">
@@ -117,7 +53,8 @@
       <br>
       <!-- Prefilled email template to contact the restaurant, using mailto -->
       <p><a href="mailto:{{ (restaurant.userid|fetch_user).email }}?subject=Enquiry%20about%20{{ restaurant.name }}&body=Hi%20there%2C%0D%0A%0D%0AI'm%20emailing%20you%20to%20enquire%20about%20your%20restaurant%20on%20FoodShare.">Contact the restaurant</a> for any queries.</p>
-  </div></div>
+  </div>
+</div>
 <!-- Google Maps Embed -->
 <div class="restaurantviewitem">
 <iframe

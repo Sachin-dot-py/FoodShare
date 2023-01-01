@@ -5,21 +5,6 @@
     <title>Explore Restaurants - FoodShare</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        .restaurants-flexcontainer {
-            display: flex;
-            flex-wrap: wrap;
-            flex-flow: row wrap;
-            flex-direction: row;
-        }
-        .restaurant {
-            margin: 10px;
-            padding: 20px;
-            width: 25%;
-            background-color: #f1f1f1;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
 <div class="navbar">
@@ -42,7 +27,8 @@
 <div class="restaurant" style="font-size: 20px;">
     <a href="/restaurants/{{ restaurant.restid }}">
         <div class="imagecontainer1" style="height: 200px; width: 100%">
-    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;"></div>
+    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;">
+        </div>
         <h3>{{ restaurant.name }}</h3>
     </a>
     {% if restaurant.avgreview %}
@@ -68,7 +54,8 @@
 <div class="restaurant">
     <a href="/restaurants/{{ restaurant.restid }}">
        <div class="imagecontainer1" style="height: 200px; width: 100%">
-    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;"></div>
+    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;">
+       </div>
         <h3>{{ restaurant.name }}</h3>
     </a>
     {% if restaurant.avgreview %}

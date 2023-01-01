@@ -20,7 +20,7 @@ app = Flask(__name__)
 app.secret_key = FLASK_SECRET_KEY
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1000 * 1000  # Limiting uploads to 8 megabytes
 
-logging.basicConfig(filename='FoodShare.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s : %(message)s')
+logging.basicConfig(filename='FoodShare.log', level=logging.INFO, format='%(asctime)s %(levelname)s : %(message)s')
 
 
 @app.template_filter()
