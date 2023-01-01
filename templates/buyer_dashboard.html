@@ -5,6 +5,21 @@
     <title>Explore Restaurants - FoodShare</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .restaurants-flexcontainer {
+            display: flex;
+            flex-wrap: wrap;
+            flex-flow: row wrap;
+            flex-direction: row;
+        }
+        .restaurant {
+            margin: 10px;
+            padding: 20px;
+            width: 25%;
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <div class="navbar">
@@ -20,42 +35,45 @@
 <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
 <a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
 </div>
-<h1>Restaurants Near You</h1>
+<h1 style="margin-left:10px;">Restaurants Near You</h1>
+<div class="restaurants-flexcontainer">
 {% for restaurant in restaurants %}
 {% if restaurant.distance <= 750 %}  <!-- If restaurant is nearby -->
-<div class="restaurant">
+<div class="restaurant" style="font-size: 20px;">
     <a href="/restaurants/{{ restaurant.restid }}">
-        <img src="/uploads/{{ restaurant.coverpic }}" height="75" width="75">
+        <div class="imagecontainer1" style="height: 200px; width: 100%">
+    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;"></div>
         <h3>{{ restaurant.name }}</h3>
     </a>
     {% if restaurant.avgreview %}
         {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|int }}
         {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|int) }}
-        {{ restaurant.avgreview }} stars
-        <br>
+    {% else %}
+        No reviews yet.
     {% endif %}
+    <br>
     {% if restaurant.distance >= 1000 %}
         {{ "%.1f"|format(restaurant.distance / 1000) }} km away
     {% else %}
         {{ restaurant.distance|round(-1, 'ceil')|int }} m away
     {% endif %}
-        <br>
 </div>
 {% endif %}
 {% endfor %}
-<h1>Other Restaurants</h1>
+    </div>
+<h1 style="margin-left:10px;">Other Restaurants</h1>
+<div class="restaurants-flexcontainer">
 {% for restaurant in restaurants %}
 {% if restaurant.distance > 750 %}  <!-- If restaurant is NOT nearby -->
 <div class="restaurant">
     <a href="/restaurants/{{ restaurant.restid }}">
-        <img src="/uploads/{{ restaurant.coverpic }}" height="75" width="75">
+       <div class="imagecontainer1" style="height: 200px; width: 100%">
+    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;"></div>
         <h3>{{ restaurant.name }}</h3>
     </a>
     {% if restaurant.avgreview %}
         {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|int }}
         {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|int) }}
-        {{ restaurant.avgreview }} stars
-        <br>
     {% endif %}
     {% if restaurant.distance >= 1000 %}
         {{ "%.1f"|format(restaurant.distance / 1000) }} km away
@@ -66,7 +84,7 @@
 </div>
 {% endif %}
 {% endfor %}
-
+</div>
 <div id="snackbar"></div>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% if alert %}

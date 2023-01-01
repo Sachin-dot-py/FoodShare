@@ -43,7 +43,7 @@ def login_required(func):
     @wraps(func)
     def decorator(*args, **kwargs):
         if not session.get('email', None):
-            return redirect(url_for('login_page', next=request.url))
+            return redirect(url_for('login_page', next=request.url, alert='Please login to continue'))
         return func(*args, **kwargs)
 
     return decorator
@@ -81,15 +81,14 @@ def login_page():
             if request.form['next']:  # If user was initially redirected to the login page
                 return redirect(request.form['next'])
             else:
-                return redirect(url_for("buyer_dashboard"))
+                return redirect(url_for("buyer_dashboard", alert="Welcome back!"))
         else:
             error = 'The credentials you have entered are incorrect. Please try again.'
 
     if session.get('email', None):  # If user is already logged in
         return redirect(url_for("buyer_dashboard"))
 
-    #  Login page is opened (GET request) or login form submitted with invalid credentials
-    return render_template('login.html', error=error, next=request.form.get('next', ""))
+    return render_template('login.html', error=error, alert=request.args.get('alert', None), next=request.form.get('next', ''))
 
 
 @app.route('/sign_up', methods=["GET", "POST"])
@@ -177,14 +176,14 @@ def reset_password(reset_id: int):
 @login_required
 def change_password():
     if request.method == "GET":  # User opening the webpage
-        return render_template("reset_password.html", change_password=True)
+        return render_template("reset_password.html", alert=request.args.get("alert"), change_password=True)
     else:  # Form submitted
         db = UserDB()
         user = db.get_user(session['email'])
         db.edit_user(user['email'], unhashed_password=request.form['password'])
         message = CHANGE_PASS_NOTIF.format(fname=user['fname'], SUPPORT_EMAIL=SUPPORT_EMAIL)
         send_email("Your password has been changed", message, COMMS_EMAIL, [user['email']])
-        return redirect(url_for("change_password", alert="Your password has been changed."))
+        return redirect(url_for("change_password", alert="Your password has been changed."), code=303)
 
 
 @app.route('/logout', methods=['GET'])
@@ -205,7 +204,7 @@ def contact_us():
                                              nature=request.form['nature'])
         send_email(f"New {request.form['nature'].lower()} from FoodShare", message, COMMS_EMAIL, [SUPPORT_EMAIL])
 
-        return render_template("contact_us.html", alert="Your message has been sent. We will get back to you shortly.")
+        return render_template("contact_us.html", signed_in=bool(session.get('email')), alert="Your message has been sent. We will get back to you shortly.")
 
 
 @app.route('/autocomplete/address', methods=['GET'])
@@ -231,7 +230,7 @@ def buyer_dashboard():
         restaurant_coords = (restaurant['longitude'], restaurant['latitude'])
         distance = api.distance_between(user_coords, restaurant_coords)
         restaurant['distance'] = distance
-    return render_template("buyer_dashboard.html", restaurants=restaurants)
+    return render_template("buyer_dashboard.html", restaurants=restaurants, alert=request.args.get('alert', None))
 
 
 @app.route("/restaurants/<int:restid>", methods=['GET'])

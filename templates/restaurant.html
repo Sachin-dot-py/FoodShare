@@ -104,6 +104,8 @@
         {{ '<span class="fa fa-star" style="font-size: 26px;"></span>&nbsp;'|safe * (5-restaurant.avgreview|round|int) }}
       <span style="font-size: 26px;">{{ restaurant.avgreview }} stars ({{ restaurant.numreviews }} reviews)</span>
         <br>
+{% else %}
+        <span style="font-size: 26px;">No reviews yet</span>
 {% endif %}
       <span style="font-size: 20px;">
 {% if restaurant.distance >= 1000 %}
