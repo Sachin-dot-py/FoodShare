@@ -3,145 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <title>Update Menu - FoodShare</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='secondary.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='secondary.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 </head>
 <body>
 <div style="display: flex; justify-content: center;">
-<section class="modal hidden">
-  <div class="flex">
-    <button class="btn-close">⨉</button>
-  </div>
-  <div>
-    <h3 class="modal-header">Add Food Item</h3>
-  </div>
-    <form name="addfooditem" id="modalform" method="POST" action="/fooditem/add" enctype="multipart/form-data">
-    <table style="width:100%;">
-        <input type="hidden" id="modalitemid" name="itemid" value="">
-        <tr>
-        <td>Name</td>
-            <td><input type="text" name="name" id="modalname" required size="40"></td>
-        </tr>
-        <tr>
-        <td>Description</td>
-            <td><input type="text" name="description" id="modaldesc" required size="40"></td>
-        </tr>
-        <tr>
-        <td>Price</td>
-            <td>$ <input type="number" step=".01" name="price" id="modalprice" required size="10"></td>
-            </tr>
-        <tr>
-        <td>Image</td>
-            <td> <input type="file" name="itemimg"></td>
-            </tr>
-        <tr>
-        <td>
-        Dietary Restrictions
-            </td>
-            <td>
-                <table border="0">
-                    <tr>
-                        <td><input type="checkbox" style="transform: scale(1.3);" name="dietary" value="dairy" id="dietarydairy"> Dairy Products &nbsp;</td>
-                        <td><input type="checkbox" style="transform: scale(1.3);" name="dietary" value="meat" id="dietarymeat"> Meat</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" style="transform: scale(1.3);" name="dietary" value="seafood" id="dietaryseafood"> Seafood</td>
-                        <td><input type="checkbox" style="transform: scale(1.3);" name="dietary" value="eggs" id="dietaryeggs"> Eggs</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" style="transform: scale(1.3);" name="dietary" value="nuts" id="dietarynuts"> Nuts</td>
-                    </tr>
-                </table>
-        </td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-        </tr>
-        </table>
-    <div>
-<button type="submit" class="btn button greenhovereffect" style="width: 48%;">Save</button>
-        <button type="button" class="btn button greenhovereffect redhovereffect" onclick="modalDeleteFoodItem();" style="width: 48%;">Delete</button>
-</div>
+    <section class="modal hidden">
+        <div class="flex">
+            <button class="btn-close">⨉</button>
+        </div>
+        <div>
+            <h3 class="modal-header">Add Food Item</h3>
+        </div>
+        <form name="addfooditem" id="modalform" method="POST" action="/fooditem/add" enctype="multipart/form-data">
+            <table style="width:100%;">
+                <input type="hidden" id="modalitemid" name="itemid" value="">
+                <tr>
+                    <td>Name</td>
+                    <td><input type="text" name="name" id="modalname" required size="40"></td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td><input type="text" name="description" id="modaldesc" required size="40"></td>
+                </tr>
+                <tr>
+                    <td>Price</td>
+                    <td>$ <input type="number" step=".01" name="price" id="modalprice" required size="10"></td>
+                </tr>
+                <tr>
+                    <td>Image</td>
+                    <td><input type="file" name="itemimg"></td>
+                </tr>
+                <tr>
+                    <td>
+                        Dietary Restrictions
+                    </td>
+                    <td>
+                        <table border="0">
+                            <tr>
+                                <td><input type="checkbox" style="transform: scale(1.3);" name="dietary" value="dairy"
+                                           id="dietarydairy"> Dairy Products &nbsp;
+                                </td>
+                                <td><input type="checkbox" style="transform: scale(1.3);" name="dietary" value="meat"
+                                           id="dietarymeat"> Meat
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" style="transform: scale(1.3);" name="dietary" value="seafood"
+                                           id="dietaryseafood"> Seafood
+                                </td>
+                                <td><input type="checkbox" style="transform: scale(1.3);" name="dietary" value="eggs"
+                                           id="dietaryeggs"> Eggs
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" style="transform: scale(1.3);" name="dietary" value="nuts"
+                                           id="dietarynuts"> Nuts
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+            <div>
+                <button type="submit" class="btn button greenhovereffect" style="width: 48%;">Save</button>
+                <button type="button" class="btn button greenhovereffect redhovereffect"
+                        onclick="modalDeleteFoodItem();" style="width: 48%;">Delete
+                </button>
+            </div>
         </form>
-</section>
+    </section>
 </div>
 <div class="overlay hidden"></div>
 <div class="navbar">
-<!-- FoodShare Logo -->
-<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
-<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
-</a>
-<a href="{{  url_for('seller_dashboard') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
-<a href="{{  url_for('edit_restaurant') }}" class="active"><i class="fa fa-edit"></i> &nbsp;Edit Restaurant/Menu</a>
-<a href="/reviews/view/{{ restaurant.restid }}"><i class="fa fa-pencil"></i> &nbsp;My Restaurant Reviews</a>
-<a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
-<a href="{{  url_for('buyer_dashboard') }}" class="split">Switch to Buyer View &nbsp;<i class="fa fa-angle-double-right"></i></a>
+    <!-- FoodShare Logo -->
+    <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+        <img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px"
+             style="vertical-align:top; border-bottom: 1px solid #333;">
+    </a>
+    <a href="{{  url_for('seller_dashboard') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
+    <a href="{{  url_for('edit_restaurant') }}" class="active"><i class="fa fa-edit"></i> &nbsp;Edit Restaurant/Menu</a>
+    <a href="/reviews/view/{{ restaurant.restid }}"><i class="fa fa-pencil"></i> &nbsp;My Restaurant Reviews</a>
+    <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
+    <a href="{{  url_for('buyer_dashboard') }}" class="split">Switch to Buyer View &nbsp;<i
+            class="fa fa-angle-double-right"></i></a>
 </div>
 <br><br>
 <center>
-<div class="card">
-  <h1>Update Restaurant Details</h1>
-  <div class="container">
-<form method="POST" enctype="multipart/form-data" action="/restaurant/edit">
-    {% if error %}
-        <p>{{ error }}</p>
-    {% endif %}
-    <table border=0 cellspacing=10>
+    <div class="card">
+        <h1>Update Restaurant Details</h1>
+        <div class="container">
+            <form method="POST" enctype="multipart/form-data" action="/restaurant/edit">
+                {% if error %}
+                <p>{{ error }}</p>
+                {% endif %}
+                <table border=0 cellspacing=10>
+                    <tr>
+                        <td style="text-align: left;">Restaurant Name:</td>
+                        <td><input type="text" name="name" value="{{ restaurant.name }}" required autofocus size="50">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">Address:</td>
+                        <td><input type="text" name="address" value="{{ restaurant.address }}" required size="50"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">Cover Picture:</td>
+                        <td style="text-align: left;"><input type="file" name="coverpic"
+                                                             accept="{{ allowed_extensions }}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="submit" class="button greenhovereffect" style="width: 100%; padding:8px;">
+                                Update Restaurant
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <h2>Current Menu</h2>
+    <table class="tables" style="width:75%;">
         <tr>
-            <td style="text-align: left;">Restaurant Name:</td>
-            <td><input type="text" name="name" value="{{ restaurant.name }}" required autofocus size="50"></td>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Dietary Restrictions</th>
+            <th>In Menu</th>
+            <th>Actions</th>
         </tr>
-        <tr>
-            <td style="text-align: left;">Address:</td>
-            <td><input type="text" name="address" value="{{ restaurant.address }}" required size="50"></td>
-        </tr>
-        <tr>
-            <td style="text-align: left;">Cover Picture:</td>
-            <td style="text-align: left;"><input type="file" name="coverpic" accept="{{ allowed_extensions }}"> </td>
-        </tr>
-        <tr>
-            <td colspan="2"><button type="submit" class="button greenhovereffect" style="width: 100%; padding:8px;">Update Restaurant</button></td>
-        </tr>
+        {% for item in fooditems %}
+        <form name="updatemenu" id="{{ item.itemid }}" method="POST" action="/menu/update">
+            <input type="hidden" name="itemid" value="{{ item.itemid }}">
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>${{ item.price }}</td>
+                <td><img src="/uploads/{{ item.picture }}" height="25" width="50"></td>
+                <td>{{ ", ".join(item.restrictions) }}</td>
+                <td>
+                    <input type="checkbox" style="transform: scale(1.5);" name="menu"
+                           onclick="document.getElementById('{{ item.itemid }}').submit();"
+                           {% if item.inmenu %} checked {% endif %}>
+                </td>
+                <td style="padding: 0px; margin: 0px;">
+                    <button type="button" class="button tablebutton" style="vertical-align:middle"
+                            onclick="addEditFoodItem({{ item.itemid }}, '{{ item.name }}', '{{ item.description }}', '{{ item.price }}', '{{ ', '.join(item.restrictions) }}');">
+                        <span>Edit/Delete </span></button>
+                </td>
+            </tr>
+        </form>
+        {% endfor %}
     </table>
-</form>
-  </div>
-</div>
-<h2>Current Menu</h2>
-<table class="tables" style="width:75%;">
-    <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Image</th>
-        <th>Dietary Restrictions</th>
-        <th>In Menu</th>
-        <th>Actions</th>
-    </tr>
-    {% for item in fooditems %}
-    <form name="updatemenu" id="{{ item.itemid }}" method="POST" action="/menu/update">
-        <input type="hidden" name="itemid" value="{{ item.itemid }}">
-        <tr>
-        <td>{{ item.name }}</td>
-        <td>{{ item.description }}</td>
-        <td>${{ item.price }}</td>
-        <td><img src="/uploads/{{ item.picture }}" height="25" width="50"></td>
-        <td>{{ ", ".join(item.restrictions) }}</td>
-        <td>
-            <input type="checkbox" style="transform: scale(1.5);" name="menu" onclick="document.getElementById('{{ item.itemid }}').submit();"
-                   {% if item.inmenu %} checked {% endif %}>
-        </td>
-             <td style="padding: 0px; margin: 0px;">
-                <button type="button" class="button tablebutton" style="vertical-align:middle" onclick="addEditFoodItem({{ item.itemid }}, '{{ item.name }}', '{{ item.description }}', '{{ item.price }}', '{{ ', '.join(item.restrictions) }}');"><span>Edit/Delete </span></button>
-            </td>
-        </tr>
-    </form>
-    {% endfor %}
-</table>
     <br>
-<button class="addfooditem button greenhovereffect" onclick="addEditFoodItem();" style="padding:12px 20px;">Add Food Item</button>
-<div id="snackbar"></div>
+    <button class="addfooditem button greenhovereffect" onclick="addEditFoodItem();" style="padding:12px 20px;">Add Food
+        Item
+    </button>
+    <div id="snackbar"></div>
     <script src="{{ url_for('static', filename='main.js') }}"></script>
     <br><br><br>
 </center>

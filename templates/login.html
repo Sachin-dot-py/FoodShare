@@ -8,49 +8,53 @@
 </head>
 <body>
 <div class="navbar">
-<!-- FoodShare Logo -->
-<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
-<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
-</a>
-  <a href="/"><i class="fa fa-home"></i> &nbsp;Home</a>
-  <a class="active" href="/login"><i class="fa fa-sign-in"></i> &nbsp; Login</a>
-  <a href="/sign_up"><i class="fa fa-pencil"></i> &nbsp;Sign Up</a>
-  <a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact Us</a>
+    <!-- FoodShare Logo -->
+    <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+        <img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px"
+             style="vertical-align:top; border-bottom: 1px solid #333;">
+    </a>
+    <a href="/"><i class="fa fa-home"></i> &nbsp;Home</a>
+    <a class="active" href="/login"><i class="fa fa-sign-in"></i> &nbsp; Login</a>
+    <a href="/sign_up"><i class="fa fa-pencil"></i> &nbsp;Sign Up</a>
+    <a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact Us</a>
 </div>
 <br><br>
 <center>
-<div class="card">
-  <h1>Login to FoodShare</h1>
-  <div class="container">
-    <form method="POST" action="/login">
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    <p><input type="hidden" name="next" value="{{ request.args.get('next', '') }}"/></p>
-    <table border=0 cellspacing=10 align="center" style="text-align: left;">
-        <tr>
-            <td>Email:</td>
-            <td><input type="email" name="email" required autofocus size="30"></td>
-        </tr>
-        <tr>
-            <td>Password:</td>
-            <td><input type="password" name="password" required size="30"></td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="checkbox" name="keep_me_logged_in" checked> Keep me Logged In</td>
-        </tr>
-        <tr>
-            <td colspan="2" style="text-align: center;"><button type="submit" class="button hovereffect">Sign In</button></td>
-        </tr>
-        <tr>
-            <td style="text-align: center;"><a href="{{ url_for('sign_up_page') }}">Sign Up</a></td>
-            <td style="text-align: center;"><a href="{{ url_for('reset_password_page') }}">Reset Password</a></td>
-        </tr>
-    </table>
-</form>
-  </div>
-</div>
-    </center>
+    <div class="card">
+        <h1>Login to FoodShare</h1>
+        <div class="container">
+            <form method="POST" action="/login">
+                {% if error %}
+                <p style="color: red;">{{ error }}</p>
+                {% endif %}
+                <p><input type="hidden" name="next" value="{{ request.args.get('next', '') }}"/></p>
+                <table border=0 cellspacing=10 align="center" style="text-align: left;">
+                    <tr>
+                        <td>Email:</td>
+                        <td><input type="email" name="email" required autofocus size="30"></td>
+                    </tr>
+                    <tr>
+                        <td>Password:</td>
+                        <td><input type="password" name="password" required size="30"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="checkbox" name="keep_me_logged_in" checked> Keep me Logged In</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <button type="submit" class="button hovereffect">Sign In</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;"><a href="{{ url_for('sign_up_page') }}">Sign Up</a></td>
+                        <td style="text-align: center;"><a href="{{ url_for('reset_password_page') }}">Reset
+                            Password</a></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</center>
 <div id="snackbar"></div>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% if alert %}

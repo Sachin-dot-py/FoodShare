@@ -9,45 +9,50 @@
 <body>
 {% if is_owner %}
 <div class="navbar">
-<!-- FoodShare Logo -->
-<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
-<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
-</a>
-<a href="{{  url_for('seller_dashboard') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
-<a href="{{  url_for('edit_restaurant') }}"><i class="fa fa-edit"></i> &nbsp;Edit Restaurant/Menu</a>
-<a href="/reviews/view/{{ restaurant.restid }}" class="active"><i class="fa fa-pencil"></i> &nbsp;My Restaurant Reviews</a>
-<a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
-<a href="{{  url_for('buyer_dashboard') }}" class="split">Switch to Buyer View &nbsp;<i class="fa fa-angle-double-right"></i></a>
+    <!-- FoodShare Logo -->
+    <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+        <img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px"
+             style="vertical-align:top; border-bottom: 1px solid #333;">
+    </a>
+    <a href="{{  url_for('seller_dashboard') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
+    <a href="{{  url_for('edit_restaurant') }}"><i class="fa fa-edit"></i> &nbsp;Edit Restaurant/Menu</a>
+    <a href="/reviews/view/{{ restaurant.restid }}" class="active"><i class="fa fa-pencil"></i> &nbsp;My Restaurant
+        Reviews</a>
+    <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
+    <a href="{{  url_for('buyer_dashboard') }}" class="split">Switch to Buyer View &nbsp;<i
+            class="fa fa-angle-double-right"></i></a>
 </div>
 <h1 style="text-align: center;">Your Customer Reviews</h1>
 {% else %}
 <div class="navbar">
-<!-- FoodShare Logo -->
-<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
-<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
-</a>
-<a href="{{  url_for('buyer_dashboard') }}"><i class="fa fa-cutlery"></i> &nbsp;Restaurants</a>
-<a href="{{  url_for('change_password') }}"><i class="fa fa-edit"></i> &nbsp;Edit Profile</a>
-<a href="{{ url_for('buyer_orders') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
-<a href="{{ url_for('view_cart') }}" class="active"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
-<a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact FoodShare</a>
-<a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
-<a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
+    <!-- FoodShare Logo -->
+    <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+        <img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px"
+             style="vertical-align:top; border-bottom: 1px solid #333;">
+    </a>
+    <a href="{{  url_for('buyer_dashboard') }}"><i class="fa fa-cutlery"></i> &nbsp;Restaurants</a>
+    <a href="{{  url_for('change_password') }}"><i class="fa fa-edit"></i> &nbsp;Edit Profile</a>
+    <a href="{{ url_for('buyer_orders') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
+    <a href="{{ url_for('view_cart') }}" class="active"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
+    <a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact FoodShare</a>
+    <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
+    <a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i
+            class="fa fa-angle-double-right"></i></a>
 </div>
 <h1 style="text-align: center;">Customer Reviews for {{ restaurant.name }}</h1>
 {% endif %}
 <div class="content" style="max-width: 50%; text-align: center; margin: auto;">
 
-{% if restaurant.avgreview %}
-        {{ '&nbsp;<span class="fa fa-star checked" style="font-size: 32px;"></span>'|safe * restaurant.avgreview|round|int }}
-        {{ '<span class="fa fa-star" style="font-size: 32px;"></span>&nbsp;'|safe * (5-restaurant.avgreview|round|int) }}
-        <span style="font-size: 32px;">{{ restaurant.avgreview }} stars
+    {% if restaurant.avgreview %}
+    {{ '&nbsp;<span class="fa fa-star checked" style="font-size: 32px;"></span>'|safe * restaurant.avgreview|round|int }}
+    {{ '<span class="fa fa-star" style="font-size: 32px;"></span>&nbsp;'|safe * (5-restaurant.avgreview|round|int) }}
+    <span style="font-size: 32px;">{{ restaurant.avgreview }} stars
 ({{ restaurant.numreviews }} reviews)</span>
-        <br>
-{% else %}
-No reviews yet. Check back later after customers have left you reviews.
-{% endif %}
-{% for review in reviews %}
+    <br>
+    {% else %}
+    No reviews yet. Check back later after customers have left you reviews.
+    {% endif %}
+    {% for review in reviews %}
     <div class="review reviewbox" style="text-align: left;">
         {{ '&nbsp;<i class="fa fa-star checked" style="font-size: 24px;"></i>'|safe * review.stars|round|int }}
         {{ '<i class="fa fa-star" style="font-size: 24px;"></i>&nbsp;'|safe * (5-review.stars|round|int) }}
@@ -56,7 +61,7 @@ No reviews yet. Check back later after customers have left you reviews.
         <p><i>{{ (review.userid|fetch_user).fname }} {{( review.userid|fetch_user).lname }}</i> on <i>{{ review.submittedat|format_date }}</i></p>
         <p><a href="/orders/invoice/{{ review.orderid }}" target="_blank">View this order.</a></p>
     </div>
-{% endfor %}
-    </div>
+    {% endfor %}
+</div>
 </body>
 </html>

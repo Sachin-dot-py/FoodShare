@@ -4,78 +4,85 @@
     <meta charset="UTF-8">
     <title>Contact Us - FoodShare</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <div class="navbar">
-{% if signed_in %}
-<div class="navbar">
-<!-- FoodShare Logo -->
-<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
-<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
-</a>
-<a href="{{  url_for('buyer_dashboard') }}"><i class="fa fa-cutlery"></i> &nbsp;Restaurants</a>
-<a href="{{  url_for('change_password') }}"><i class="fa fa-edit"></i> &nbsp;Edit Profile</a>
-<a href="{{ url_for('buyer_orders') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
-<a href="{{ url_for('view_cart') }}"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
-<a href="/contact_us" class="active"><i class="fa fa-envelope"></i> &nbsp;Contact FoodShare</a>
-<a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
-<a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
-</div>
-{% else %}
-<!-- FoodShare Logo -->
-<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
-<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
-</a>
-  <a href="/"><i class="fa fa-home"></i> &nbsp;Home</a>
-  <a href="/login"><i class="fa fa-sign-in"></i> &nbsp; Login</a>
-  <a href="/sign_up"><i class="fa fa-pencil"></i> &nbsp;Sign Up</a>
-  <a class="active" href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact Us</a>
-{% endif %}
+    {% if signed_in %}
+    <div class="navbar">
+        <!-- FoodShare Logo -->
+        <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+            <img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px"
+                 style="vertical-align:top; border-bottom: 1px solid #333;">
+        </a>
+        <a href="{{  url_for('buyer_dashboard') }}"><i class="fa fa-cutlery"></i> &nbsp;Restaurants</a>
+        <a href="{{  url_for('change_password') }}"><i class="fa fa-edit"></i> &nbsp;Edit Profile</a>
+        <a href="{{ url_for('buyer_orders') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
+        <a href="{{ url_for('view_cart') }}"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
+        <a href="/contact_us" class="active"><i class="fa fa-envelope"></i> &nbsp;Contact FoodShare</a>
+        <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
+        <a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i
+                class="fa fa-angle-double-right"></i></a>
+    </div>
+    {% else %}
+    <!-- FoodShare Logo -->
+    <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+        <img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px"
+             style="vertical-align:top; border-bottom: 1px solid #333;">
+    </a>
+    <a href="/"><i class="fa fa-home"></i> &nbsp;Home</a>
+    <a href="/login"><i class="fa fa-sign-in"></i> &nbsp; Login</a>
+    <a href="/sign_up"><i class="fa fa-pencil"></i> &nbsp;Sign Up</a>
+    <a class="active" href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact Us</a>
+    {% endif %}
 </div>
 <br><br>
 <center>
-<div class="card">
-  <h1>Contact Us</h1>
-  <div class="container">
-<form method="post" action="/contact_us">
-    <table border=0 cellspacing=10 align="center" style="text-align: left;">
-        <tr>
-            <td>First Name:</td>
-            <td><input type="text" name="fname" required autofocus size="30"></td>
-        </tr>
-        <tr>
-            <td>Last Name:</td>
-            <td><input type="text" name="lname" required autofocus size="30"></td>
-        </tr>
-        <tr>
-            <td>Email:</td>
-            <td><input type="email" name="email" required size="30"></td>
-        </tr>
-        <tr>
-            <td>What is the nature of your message?</td>
-            <td>
-                <select name="nature" id="nature" required style="width:82%;">
-                    <option value="query">Query</option>
-                    <option value="suggestion">Suggestion</option>
-                    <option value="complaint">Complaint</option>
-                    <option value="feedback">Feedback</option>
-                    <option value="other">Other</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Tell us more:</td>
-            <td><textarea name="message" required rows="5" cols="30" required style="resize: none;"></textarea></td>
-        </tr>
-        <tr>
-            <td colspan="2" style="text-align: center;"><button type="submit" class="button greenhovereffect">Send Message</button></td>
-        </tr>
-    </table>
-</form>
-            </div>
-</div>
-    </center>
+    <div class="card">
+        <h1>Contact Us</h1>
+        <div class="container">
+            <form method="post" action="/contact_us">
+                <table border=0 cellspacing=10 align="center" style="text-align: left;">
+                    <tr>
+                        <td>First Name:</td>
+                        <td><input type="text" name="fname" required autofocus size="30"></td>
+                    </tr>
+                    <tr>
+                        <td>Last Name:</td>
+                        <td><input type="text" name="lname" required autofocus size="30"></td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td><input type="email" name="email" required size="30"></td>
+                    </tr>
+                    <tr>
+                        <td>What is the nature of your message?</td>
+                        <td>
+                            <select name="nature" id="nature" required style="width:82%;">
+                                <option value="query">Query</option>
+                                <option value="suggestion">Suggestion</option>
+                                <option value="complaint">Complaint</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Tell us more:</td>
+                        <td><textarea name="message" required rows="5" cols="30" required
+                                      style="resize: none;"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <button type="submit" class="button greenhovereffect">Send Message</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</center>
 <div id="snackbar"></div>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% if alert %}

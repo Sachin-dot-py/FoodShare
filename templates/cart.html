@@ -8,71 +8,80 @@
 </head>
 <body>
 <div class="navbar">
-<!-- FoodShare Logo -->
-<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
-<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
-</a>
-<a href="{{  url_for('buyer_dashboard') }}"><i class="fa fa-cutlery"></i> &nbsp;Restaurants</a>
-<a href="{{  url_for('change_password') }}"><i class="fa fa-edit"></i> &nbsp;Edit Profile</a>
-<a href="{{ url_for('buyer_orders') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
-<a href="{{ url_for('view_cart') }}" class="active"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
-<a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact FoodShare</a>
-<a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
-<a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
+    <!-- FoodShare Logo -->
+    <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+        <img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px"
+             style="vertical-align:top; border-bottom: 1px solid #333;">
+    </a>
+    <a href="{{  url_for('buyer_dashboard') }}"><i class="fa fa-cutlery"></i> &nbsp;Restaurants</a>
+    <a href="{{  url_for('change_password') }}"><i class="fa fa-edit"></i> &nbsp;Edit Profile</a>
+    <a href="{{ url_for('buyer_orders') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
+    <a href="{{ url_for('view_cart') }}" class="active"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
+    <a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact FoodShare</a>
+    <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
+    <a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i
+            class="fa fa-angle-double-right"></i></a>
 </div>
 <center>
-{% if cart %}
-<br><br>
+    {% if cart %}
+    <br><br>
     <div class="card">
-  <h1>Purchasing from {{ restaurant.name }}</h1>
-  <div class="container" style="text-align: left;">
-      <b>{{ restaurant.name }}</b>,
-      <br>
-{{ restaurant.address.replace("\n", "<br>") }}
-  </div>
+        <h1>Purchasing from {{ restaurant.name }}</h1>
+        <div class="container" style="text-align: left;">
+            <b>{{ restaurant.name }}</b>,
+            <br>
+            {{ restaurant.address.replace("\n", "<br>") }}
+        </div>
     </div>
-<h1>Order Summary</h1>
-<br>
-<table cellspacing=0 class="tables">
-    <tr>
-        <th>Item</th>
-        <th>Quantity</th>
-        <th>Price</th>
-        <th>Total</th>
-    </tr>
-    {% for item in cart %}
+    <h1>Order Summary</h1>
+    <br>
+    <table cellspacing=0 class="tables">
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+        {% for item in cart %}
         <tr>
             <td>{{ item.name }}</td>
             <td>{{ item.quantity }}</td>
             <td>${{ "%.2f"|format(item.price) }}</td>
             <td>${{ "%.2f"|format(item.total) }}</td>
         </tr>
-    {% endfor %}
-    <tr>
-        <td colspan=3 style="text-align: right;"><b>TOTAL</b></td>
-        <td>${{ "%.2f"|format(total) }}</td>
-    </tr>
-    <tr>
-        <form method="POST" action="/cart/submit">
-        <td style="padding: 0px; margin: 0px;" colspan="2"> <button type="submit" name="action" value="checkout" class="button tablebutton"><span>Checkout </span></button></td>
-        <td style="padding: 0px; margin: 0px;" colspan="2"><button type="submit" name="action" value="clear" class="button tablebutton" style="background-color: #f44336;"><span>Clear Cart </span></button></td>
-        </form>
-    </tr>
-</table>
-<br>
-    <p>Not done yet? <a href="/restaurants/{{ restaurant.restid }}">Add more items</a> to your cart before placing your order.</p>
-<br><br>
-{% else %}
+        {% endfor %}
+        <tr>
+            <td colspan=3 style="text-align: right;"><b>TOTAL</b></td>
+            <td>${{ "%.2f"|format(total) }}</td>
+        </tr>
+        <tr>
+            <form method="POST" action="/cart/submit">
+                <td style="padding: 0px; margin: 0px;" colspan="2">
+                    <button type="submit" name="action" value="checkout" class="button tablebutton">
+                        <span>Checkout </span></button>
+                </td>
+                <td style="padding: 0px; margin: 0px;" colspan="2">
+                    <button type="submit" name="action" value="clear" class="button tablebutton"
+                            style="background-color: #f44336;"><span>Clear Cart </span></button>
+                </td>
+            </form>
+        </tr>
+    </table>
+    <br>
+    <p>Not done yet? <a href="/restaurants/{{ restaurant.restid }}">Add more items</a> to your cart before placing your
+        order.</p>
+    <br><br>
+    {% else %}
     <br><br>
     <div class="card">
-  <h1>Your cart is empty.</h1>
-  <div class="container" style="text-align: left;">
-      <p>Your cart is empty. Go <a href="/restaurants">add some items</a> from our variety of restaurants.</p>
-  </div>
+        <h1>Your cart is empty.</h1>
+        <div class="container" style="text-align: left;">
+            <p>Your cart is empty. Go <a href="/restaurants">add some items</a> from our variety of restaurants.</p>
+        </div>
     </div>
-{% endif %}
-<div id="snackbar"></div>
-    </center>
+    {% endif %}
+    <div id="snackbar"></div>
+</center>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% if alert %}
 <script>

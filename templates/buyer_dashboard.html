@@ -4,73 +4,78 @@
     <meta charset="UTF-8">
     <title>Explore Restaurants - FoodShare</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <div class="navbar">
-<!-- FoodShare Logo -->
-<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
-<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
-</a>
-<a href="{{  url_for('buyer_dashboard') }}" class="active"><i class="fa fa-cutlery"></i> &nbsp;Restaurants</a>
-<a href="{{  url_for('change_password') }}"><i class="fa fa-edit"></i> &nbsp;Edit Profile</a>
-<a href="{{ url_for('buyer_orders') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
-<a href="{{ url_for('view_cart') }}"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
-<a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact FoodShare</a>
-<a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
-<a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
+    <!-- FoodShare Logo -->
+    <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+        <img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px"
+             style="vertical-align:top; border-bottom: 1px solid #333;">
+    </a>
+    <a href="{{  url_for('buyer_dashboard') }}" class="active"><i class="fa fa-cutlery"></i> &nbsp;Restaurants</a>
+    <a href="{{  url_for('change_password') }}"><i class="fa fa-edit"></i> &nbsp;Edit Profile</a>
+    <a href="{{ url_for('buyer_orders') }}"><i class="fa fa-credit-card"></i> &nbsp;My Orders</a>
+    <a href="{{ url_for('view_cart') }}"><i class="fa fa-shopping-cart"></i> &nbsp;Cart</a>
+    <a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact FoodShare</a>
+    <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
+    <a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i
+            class="fa fa-angle-double-right"></i></a>
 </div>
 <h1 style="margin-left:10px;">Restaurants Near You</h1>
 <div class="restaurants-flexcontainer">
-{% for restaurant in restaurants %}
-{% if restaurant.distance <= 750 %}  <!-- If restaurant is nearby -->
-<div class="restaurant" style="font-size: 20px;">
-    <a href="/restaurants/{{ restaurant.restid }}">
-        <div class="imagecontainer1" style="height: 200px; width: 100%">
-    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;">
-        </div>
-        <h3>{{ restaurant.name }}</h3>
-    </a>
-    {% if restaurant.avgreview %}
+    {% for restaurant in restaurants %}
+    {% if restaurant.distance <= 750 %}  <!-- If restaurant is nearby -->
+    <div class="restaurant" style="font-size: 20px;">
+        <a href="/restaurants/{{ restaurant.restid }}">
+            <div class="imagecontainer1" style="height: 200px; width: 100%">
+                <img src="/uploads/{{ restaurant.coverpic }}"
+                     style="float: left; object-fit: contain; height: 100%; width: 100%;">
+            </div>
+            <h3>{{ restaurant.name }}</h3>
+        </a>
+        {% if restaurant.avgreview %}
         {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|int }}
         {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|int) }}
-    {% else %}
+        {% else %}
         No reviews yet.
-    {% endif %}
-    <br>
-    {% if restaurant.distance >= 1000 %}
+        {% endif %}
+        <br>
+        {% if restaurant.distance >= 1000 %}
         {{ "%.1f"|format(restaurant.distance / 1000) }} km away
-    {% else %}
+        {% else %}
         {{ restaurant.distance|round(-1, 'ceil')|int }} m away
-    {% endif %}
-</div>
-{% endif %}
-{% endfor %}
+        {% endif %}
     </div>
+    {% endif %}
+    {% endfor %}
+</div>
 <h1 style="margin-left:10px;">Other Restaurants</h1>
 <div class="restaurants-flexcontainer">
-{% for restaurant in restaurants %}
-{% if restaurant.distance > 750 %}  <!-- If restaurant is NOT nearby -->
-<div class="restaurant">
-    <a href="/restaurants/{{ restaurant.restid }}">
-       <div class="imagecontainer1" style="height: 200px; width: 100%">
-    <img src="/uploads/{{ restaurant.coverpic }}" style="float: left; object-fit: contain; height: 100%; width: 100%;">
-       </div>
-        <h3>{{ restaurant.name }}</h3>
-    </a>
-    {% if restaurant.avgreview %}
+    {% for restaurant in restaurants %}
+    {% if restaurant.distance > 750 %}  <!-- If restaurant is NOT nearby -->
+    <div class="restaurant">
+        <a href="/restaurants/{{ restaurant.restid }}">
+            <div class="imagecontainer1" style="height: 200px; width: 100%">
+                <img src="/uploads/{{ restaurant.coverpic }}"
+                     style="float: left; object-fit: contain; height: 100%; width: 100%;">
+            </div>
+            <h3>{{ restaurant.name }}</h3>
+        </a>
+        {% if restaurant.avgreview %}
         {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|int }}
         {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|int) }}
-    {% endif %}
-    {% if restaurant.distance >= 1000 %}
+        {% endif %}
+        {% if restaurant.distance >= 1000 %}
         {{ "%.1f"|format(restaurant.distance / 1000) }} km away
-    {% else %}
+        {% else %}
         {{ restaurant.distance|round(-1, 'ceil')|int }} m away
-    {% endif %}
+        {% endif %}
         <br>
-</div>
-{% endif %}
-{% endfor %}
+    </div>
+    {% endif %}
+    {% endfor %}
 </div>
 <div id="snackbar"></div>
 <script src="{{ url_for('static', filename='main.js') }}"></script>

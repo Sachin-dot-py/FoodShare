@@ -1,66 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Invoice #{{ order.orderid }} - FoodShare</title>
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='invoice.css') }}">
-	</head>
-	<body>
-		<h1>FoodShare Invoice #{{ order.orderid }}</h1>
-		<br>
-		<div class="invoice-box">
-			<table>
-				<tr class="top">
-					<td colspan="2">
-						<table>
-							<tr>
-								<td class="title">
-									<img src="{{ url_for('static', filename='logo2.png') }}" alt="FoodShare logo" style="width: 100%; max-width: 300px" />
-								</td>
-								<td>
-									Invoice #: {{ order.orderid }}<br />
-									Order Placed: {{ order.date }} {{ order.time }}<br />
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr class="information">
-					<td colspan="2">
-						<table>
-							<tr>
-								<td>
-									{{ restaurant.name }} <br \>
-									{{ restaurant.address }} <br \>
-								</td>
-								<td>
-									{{ buyer.fname }} {{ buyer.lname }}<br \>
-									{{ buyer.email }} <br \>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr class="details">
-					<td>Order Status: <b>{{ order.orderstatus }}</b>.</td>
-				</tr>
-				<tr class="heading">
-					<td>Item</td>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Invoice #{{ order.orderid }} - FoodShare</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='invoice.css') }}">
+</head>
+<body>
+<h1>FoodShare Invoice #{{ order.orderid }}</h1>
+<br>
+<div class="invoice-box">
+    <table>
+        <tr class="top">
+            <td colspan="2">
+                <table>
+                    <tr>
+                        <td class="title">
+                            <img src="{{ url_for('static', filename='logo2.png') }}" alt="FoodShare logo"
+                                 style="width: 100%; max-width: 300px"/>
+                        </td>
+                        <td>
+                            Invoice #: {{ order.orderid }}<br/>
+                            Order Placed: {{ order.date }} {{ order.time }}<br/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="information">
+            <td colspan="2">
+                <table>
+                    <tr>
+                        <td>
+                            {{ restaurant.name }} <br \>
+                            {{ restaurant.address }} <br \>
+                        </td>
+                        <td>
+                            {{ buyer.fname }} {{ buyer.lname }}<br \>
+                            {{ buyer.email }} <br \>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="details">
+            <td>Order Status: <b>{{ order.orderstatus }}</b>.</td>
+        </tr>
+        <tr class="heading">
+            <td>Item</td>
 
-					<td>Total Price</td>
-				</tr>
-				{% for item in order['items'] %}
-				<tr class="item">
-					<td>{{ item.name }} <b>x{{ item.quantity }}</b></td>
-					<td>${{ "%.2f"|format(item.total) }}</td>
-				</tr>
-				{% endfor %}
-				<tr class="total">
-					<td></td>
-					<td>Total: ${{ "%.2f"|format(order.amount) }}</td>
-				</tr>
-			</table>
-		</div>
-	</body>
+            <td>Total Price</td>
+        </tr>
+        {% for item in order['items'] %}
+        <tr class="item">
+            <td>{{ item.name }} <b>x{{ item.quantity }}</b></td>
+            <td>${{ "%.2f"|format(item.total) }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total">
+            <td></td>
+            <td>Total: ${{ "%.2f"|format(order.amount) }}</td>
+        </tr>
+    </table>
+</div>
+</body>
 </html>

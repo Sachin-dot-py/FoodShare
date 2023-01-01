@@ -8,92 +8,100 @@
 </head>
 <body>
 <div class="navbar">
-<!-- FoodShare Logo -->
-<a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
-<img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px" style="vertical-align:top; border-bottom: 1px solid #333;">
-</a>
-  <a href="/"><i class="fa fa-home"></i> &nbsp;Home</a>
-  <a href="/login"><i class="fa fa-sign-in"></i> &nbsp; Login</a>
-  <a class="active" href="/sign_up"><i class="fa fa-pencil"></i> &nbsp;Sign Up</a>
-  <a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact Us</a>
+    <!-- FoodShare Logo -->
+    <a href="{{  url_for('home_page') }}" style="margin:0px;  padding: 0px;">
+        <img src="{{ url_for('static', filename='logo2.png') }}" height="48px" width="100px"
+             style="vertical-align:top; border-bottom: 1px solid #333;">
+    </a>
+    <a href="/"><i class="fa fa-home"></i> &nbsp;Home</a>
+    <a href="/login"><i class="fa fa-sign-in"></i> &nbsp; Login</a>
+    <a class="active" href="/sign_up"><i class="fa fa-pencil"></i> &nbsp;Sign Up</a>
+    <a href="/contact_us"><i class="fa fa-envelope"></i> &nbsp;Contact Us</a>
 </div>
 <br><br>
 <center>
-<div class="card">
-  <h1>Sign Up for FoodShare</h1>
-  <div class="container">
-<form method="POST" action="/sign_up" onsubmit="return validateForm();">
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    <p style="text-align: left;">All fields are required.</p>
-    <table border=0 cellspacing=10 align="center" style="text-align: left;">
-        <tr>
-            <td><font color=red><sup>*</sup></font>First Name:</td>
-            <td><input type="text" name="fname" size="50" required autofocus></td>
-        </tr>
-        <tr>
-            <td><font color=red><sup>*</sup></font>Last Name:</td>
-            <td><input type="text" name="lname" size="50" required></td>
-        </tr>
-        <tr>
-            <td><font color=red><sup>*</sup></font>Email:</td>
-            <td><input type="email" name="email" size="50" required></td>
-        </tr>
-        <tr>
-            <td><font color=red><sup>*</sup></font>Address:</td>
-            <td>
-                <input type="text" size="50" name="address" onkeyup="autocompleteAddress(this.value);" required>
-                <div id="address_autocomplete"><ul></ul></div>
-            </td>
-        </tr>
-        <tr>
-            <td><font color=red><sup>*</sup></font>Password:</td>
-            <td>
-                <input type="password" name="password" required onkeyup="validatePassword(); checkMatchingPasswords();">
-                <input type="checkbox" name="showpassword" onclick="toggleShowPassword();"> Show Password
-            </td>
-        </tr>
-        <tr id="passvalidation" hidden>
-            <td colspan="2">
-                <table border="0" cellspacing="10">
+    <div class="card">
+        <h1>Sign Up for FoodShare</h1>
+        <div class="container">
+            <form method="POST" action="/sign_up" onsubmit="return validateForm();">
+                {% if error %}
+                <p style="color: red;">{{ error }}</p>
+                {% endif %}
+                <p style="text-align: left;">All fields are required.</p>
+                <table border=0 cellspacing=10 align="center" style="text-align: left;">
                     <tr>
-                        <td colspan="2">A valid password must contain the following:</td>
+                        <td><font color=red><sup>*</sup></font>First Name:</td>
+                        <td><input type="text" name="fname" size="50" required autofocus></td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td>A special character</td>
+                        <td><font color=red><sup>*</sup></font>Last Name:</td>
+                        <td><input type="text" name="lname" size="50" required></td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td>A number</td>
+                        <td><font color=red><sup>*</sup></font>Email:</td>
+                        <td><input type="email" name="email" size="50" required></td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td>An uppercase character</td>
+                        <td><font color=red><sup>*</sup></font>Address:</td>
+                        <td>
+                            <input type="text" size="50" name="address" onkeyup="autocompleteAddress(this.value);"
+                                   required>
+                            <div id="address_autocomplete">
+                                <ul></ul>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td>At least eight characters</td>
+                        <td><font color=red><sup>*</sup></font>Password:</td>
+                        <td>
+                            <input type="password" name="password" required
+                                   onkeyup="validatePassword(); checkMatchingPasswords();">
+                            <input type="checkbox" name="showpassword" onclick="toggleShowPassword();"> Show Password
+                        </td>
+                    </tr>
+                    <tr id="passvalidation" hidden>
+                        <td colspan="2">
+                            <table border="0" cellspacing="10">
+                                <tr>
+                                    <td colspan="2">A valid password must contain the following:</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>A special character</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>A number</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>An uppercase character</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>At least eight characters</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><font color=red><sup>*</sup></font>Re-Enter Password:</td>
+                        <td><input type="password" name="repassword" required onkeyup='checkMatchingPasswords();'>
+                            &nbsp;&nbsp;<span id="passmatchvalidate"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <button type="submit" class="button greenhovereffect">Sign Up</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Already have an account? <a href="{{ url_for('login_page') }}">Log in.</a></td>
                     </tr>
                 </table>
-            </td>
-        </tr>
-        <tr>
-            <td><font color=red><sup>*</sup></font>Re-Enter Password:</td>
-            <td><input type="password" name="repassword" required onkeyup='checkMatchingPasswords();'> &nbsp;&nbsp;<span id="passmatchvalidate"></span></td>
-        </tr>
-        <tr>
-            <td colspan="2" style="text-align: center;"><button type="submit" class="button greenhovereffect">Sign Up</button></td>
-        </tr>
-        <tr>
-            <td colspan="2">Already have an account? <a href="{{ url_for('login_page') }}">Log in.</a></td>
-        </tr>
-    </table>
-</form>
-      </div>
-</div>
-    </center>
+            </form>
+        </div>
+    </div>
+</center>
 <div id="snackbar"></div>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% if alert %}
