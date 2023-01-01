@@ -83,7 +83,7 @@
     {% for order in orders %}
     {% if order.orderstatus == 'Preparing' or order.orderstatus == 'Ready' %}
     <tr id="{{ order.orderid }}">
-        <td>{{ order.restaurant.name }}</td>
+        <td><a href="/restaurants/{{ order.restaurant.restid }}">{{ order.restaurant.name }}</a></td>
         <td>{{ order.date }}</td>
         <td>{{ order.time }}</td>
         <td>${{ order.amount }}</td>
@@ -111,7 +111,7 @@
     {% for order in orders %}
     {% if order.orderstatus == 'Collected' %}
         <tr id="{{ order.orderid }}">
-        <td>{{ order.restaurant.name }}</td>
+        <td><a href="/restaurants/{{ order.restaurant.restid }}">{{ order.restaurant.name }}</a></td>
         <td>{{ order.date }}</td>
         <td>{{ order.time }}</td>
         <td>${{ order.amount }}</td>

@@ -86,21 +86,51 @@
 <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
 <a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
 </div>
-<img src="/uploads/{{ restaurant.coverpic }}" height="250" width="250">
-<h3>{{ restaurant.name }}</h3>
-<h5>{{ restaurant.address }}</h5>
+<ul class="breadcrumb" style="margin: 0px;">
+  <li><a href="/restaurants">Restaurants</a></li>
+  <li>{{ restaurant.name }}</li>
+</ul>
+<div class="restaurantviewcontainer">
+<div class="card restaurantviewitem">
+    <img src="/uploads/{{ restaurant.coverpic }}" height="100" width="200" style="float: left;">
+  <h1>{{ restaurant.name }}</h1>
+    <p style="text-align: center;">{{ restaurant.address }}</p>
+  <div class="container">
+
+
 {% if restaurant.avgreview %}
-        {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|round|int }}
-        {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|round|int) }}
-        {{ restaurant.avgreview }} stars
+        {{ '&nbsp;<span class="fa fa-star checked" style="font-size: 26px;"></span>'|safe * restaurant.avgreview|round|int }}
+        {{ '<span class="fa fa-star" style="font-size: 26px;"></span>&nbsp;'|safe * (5-restaurant.avgreview|round|int) }}
+      <span style="font-size: 26px;">{{ restaurant.avgreview }} stars ({{ restaurant.numreviews }} reviews)</span>
         <br>
 {% endif %}
+      <span style="font-size: 20px;">
 {% if restaurant.distance >= 1000 %}
-        {{ "%.1f"|format(restaurant.distance / 1000) }} km away
+        {{ "%.1f"|format(restaurant.distance / 1000) }} kilometres away
     {% else %}
-        {{ restaurant.distance|round(-1, 'ceil')|int }} m away
+        {{ restaurant.distance|round(-1, 'ceil')|int }} metres away
     {% endif %}
+      </span>
+      <br>
+      <!-- Prefilled email template to contact the restaurant, using mailto -->
+      <p><a href="mailto:{{ (restaurant.userid|fetch_user).email }}?subject=Enquiry%20about%20{{ restaurant.name }}&body=Hi%20there%2C%0D%0A%0D%0AI'm%20emailing%20you%20to%20enquire%20about%20your%20restaurant%20on%20FoodShare.">Contact the restaurant</a> for any queries.</p>
+  </div></div>
+<!-- Google Maps Embed -->
+<div class="restaurantviewitem">
+<iframe
+  width="100%"
+  height="100%"
+  frameborder="0" style="border:0"
+  referrerpolicy="no-referrer-when-downgrade"
+  src="https://www.google.com/maps/embed/v1/place?key={{ GOOGLE_API_KEY }}&q={{ restaurant.latitude|urlencode }}, {{ restaurant.longitude|urlencode }}">
+  allowfullscreen>
+</iframe>
+    </div>
+</div>
+<div style="clear: both;">
 <br>
+    <h1 style="text-align: center;">Restaurant Menu</h1>
+    <br>
 {% for row in restaurant.menu %}
 <div class="row">
     {% for item in row %}
@@ -116,18 +146,19 @@
         <p>Contains no allergens</p>
         {% endif %}
         <p>
-            <button onclick="updateCart({{ item.itemid }}, 'decrement');">-</button>
+            <button onclick="updateCart({{ item.itemid }}, 'decrement');"><i class="fa fa-minus"></i></button>
             {% if item.itemid in cart.keys() %}
-            <input type="text" value="{{ cart[item.itemid] }}" name="quantity" id="{{ item.itemid }}" disabled>
+            <input type="text" value="{{ cart[item.itemid] }}" name="quantity" id="{{ item.itemid }}" disabled size="1" title="Quantity in Cart" style="background-color: gray; border: 0px; text-align: center; color: white;">
             {% else %}
-            <input type="text" value="0" name="quantity" id="{{ item.itemid }}" disabled>
+            <input type="text" value="0" name="quantity" id="{{ item.itemid }}" disabled size="1" title="Quantity in Cart" style="background-color: gray; border: 0px; text-align: center; color: white;">
             {% endif %}
-            <button onclick="updateCart({{ item.itemid }}, 'increment');">+</button>
+            <button onclick="updateCart({{ item.itemid }}, 'increment');"><i class="fa fa-plus"></i></button>
         </p>
     </div>
   </div>
     {% endfor %}
 </div>
+    </div>
 <br>
 {% endfor %}
 <div id="snackbar"></div>

@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 from database import UserDB, RestaurantsDB, FoodItemsDB, CartDB, OrdersDB, ContactFormResponsesDB, ReviewsDB
 from utils import send_email, ORS
 from config import *
-from secret_config import FLASK_SECRET_KEY
+from secret_config import FLASK_SECRET_KEY, GOOGLE_API_KEY
 
 app = Flask(__name__)
 app.secret_key = FLASK_SECRET_KEY
@@ -249,7 +249,7 @@ def view_restaurant(restid: int):
                           range(0, len(restaurant['menu']), 4)]  # Split into groups of 4
     cart = CartDB().fetch_cart(session['userid'])
     cart = {item['itemid']: item['quantity'] for item in cart}
-    return render_template("restaurant.html", restaurant=restaurant, cart=cart)
+    return render_template("restaurant.html", restaurant=restaurant, cart=cart, GOOGLE_API_KEY=GOOGLE_API_KEY)
 
 
 @app.route("/cart/update", methods=['POST'])

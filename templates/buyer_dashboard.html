@@ -21,7 +21,8 @@
 <a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
 </div>
 <h1>Restaurants Near You</h1>
-{% for restaurant in restaurants[:8] %} <!-- Closest 8 restaurants -->
+{% for restaurant in restaurants %}
+{% if restaurant.distance <= 500 %}  <!-- If restaurant is nearby -->
 <div class="restaurant">
     <a href="/restaurants/{{ restaurant.restid }}">
         <img src="/uploads/{{ restaurant.coverpic }}" height="75" width="75">
@@ -40,10 +41,32 @@
     {% endif %}
         <br>
 </div>
-{% if restaurant == restaurant[8] %}
-<h1>Other Restaurants</h1>
 {% endif %}
 {% endfor %}
+<h1>Other Restaurants</h1>
+{% for restaurant in restaurants %}
+{% if restaurant.distance > 500 %}  <!-- If restaurant is NOT nearby -->
+<div class="restaurant">
+    <a href="/restaurants/{{ restaurant.restid }}">
+        <img src="/uploads/{{ restaurant.coverpic }}" height="75" width="75">
+        <h3>{{ restaurant.name }}</h3>
+    </a>
+    {% if restaurant.avgreview %}
+        {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|int }}
+        {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|int) }}
+        {{ restaurant.avgreview }} stars
+        <br>
+    {% endif %}
+    {% if restaurant.distance >= 1000 %}
+        {{ "%.1f"|format(restaurant.distance / 1000) }} km away
+    {% else %}
+        {{ restaurant.distance|round(-1, 'ceil')|int }} m away
+    {% endif %}
+        <br>
+</div>
+{% endif %}
+{% endfor %}
+
 <div id="snackbar"></div>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% if alert %}

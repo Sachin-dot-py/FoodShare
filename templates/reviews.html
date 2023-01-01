@@ -24,7 +24,7 @@
 <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
 <a href="{{  url_for('buyer_dashboard') }}" class="split">Switch to Buyer View &nbsp;<i class="fa fa-angle-double-right"></i></a>
 </div>
-<h1>Your Customer Reviews</h1>
+<h1 style="text-align: center;">Your Customer Reviews</h1>
 {% else %}
 <div class="navbar">
 <!-- FoodShare Logo -->
@@ -39,26 +39,29 @@
 <a href="{{  url_for('logout_page') }}" class="split">Logout &nbsp;<i class="fa fa-sign-out"></i></a>
 <a href="{{  url_for('seller_dashboard') }}" class="split">Switch to Seller View &nbsp;<i class="fa fa-angle-double-right"></i></a>
 </div>
-<h1>Customer Reviews for {{ restaurant.name }}</h1>
+<h1 style="text-align: center;">Customer Reviews for {{ restaurant.name }}</h1>
 {% endif %}
+<div class="content" style="max-width: 50%; text-align: center; margin: auto;">
+
 {% if restaurant.avgreview %}
-        {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|round|int }}
-        {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|round|int) }}
-        {{ restaurant.avgreview }} stars
-({{ restaurant.numreviews }} reviews)
+        {{ '&nbsp;<span class="fa fa-star checked" style="font-size: 32px;"></span>'|safe * restaurant.avgreview|round|int }}
+        {{ '<span class="fa fa-star" style="font-size: 32px;"></span>&nbsp;'|safe * (5-restaurant.avgreview|round|int) }}
+        <span style="font-size: 32px;">{{ restaurant.avgreview }} stars
+({{ restaurant.numreviews }} reviews)</span>
         <br>
+{% else %}
+No reviews yet. Check back later after customers have left you reviews.
 {% endif %}
 {% for review in reviews %}
-    <div class="review">
-        <h3>
-        {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * review.stars|round|int }}
-        {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-review.stars|round|int) }}
-        {{ review.title }}
-        </h3>
+    <div class="review reviewbox">
+        {{ '&nbsp;<i class="fa fa-star checked"></i>'|safe * review.stars|round|int }}
+        {{ '<i class="fa fa-star"></i>&nbsp;'|safe * (5-review.stars|round|int) }}
+        &nbsp; <span>{{ review.title }}</span>
         <p>{{ review.description }}</p>
-        <p>{{ (review.userid|fetch_user).fname }} {{( review.userid|fetch_user).lname }} on {{ review.submittedat|format_date }}</p>
+        <p><i>{{ (review.userid|fetch_user).fname }} {{( review.userid|fetch_user).lname }}</i> on <i>{{ review.submittedat|format_date }}</i></p>
         <p><a href="/orders/invoice/{{ review.orderid }}" target="_blank">View this order.</a></p>
     </div>
 {% endfor %}
+    </div>
 </body>
 </html>

@@ -292,3 +292,47 @@ input[type=text]:focus,input[type=email]:focus,input[type=password]:focus,input[
   text-align: center;
 }
 /* End Tables */
+
+/* Breadcrumb Pagination */
+ul.breadcrumb {
+  padding: 8px 16px;
+  list-style: none;
+  background-color: #eee;
+}
+
+ul.breadcrumb li {display: inline;}
+
+ul.breadcrumb li+li:before {
+  padding: 8px;
+  color: black;
+  content: "/\00a0";
+}
+
+ul.breadcrumb li a {color: green;}
+/* End Breadcrumb Pagination */
+/* Reviews */
+.reviewbox {
+  border: 2px solid #ccc;
+  background-color: #eee;
+  border-radius: 5px;
+  padding: 16px;
+  margin: 16px 0
+}
+
+.reviewbox span {
+  font-size: 20px;
+  margin-right: 15px;
+}
+/* End Reviews */
+/* View Restaurant */
+.restaurantviewcontainer {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.restaurantviewcontainer .restaurantviewitem {
+  width: 50%;
+  margin: 10px;
+  text-align: center;
+}
+/* End View Restaurant */
