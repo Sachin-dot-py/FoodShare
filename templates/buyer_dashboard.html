@@ -27,7 +27,7 @@
 <div class="restaurants-flexcontainer">
     {% for restaurant in restaurants %}
     {% if restaurant.distance <= 750 %}  <!-- If restaurant is nearby -->
-    <div class="restaurant" style="font-size: 20px;">
+    <div class="restaurant">
         <a href="/restaurants/{{ restaurant.restid }}">
             <div class="imagecontainer1" style="height: 200px; width: 100%">
                 <img src="/uploads/{{ restaurant.coverpic }}"
@@ -38,6 +38,7 @@
         {% if restaurant.avgreview %}
         {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|int }}
         {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|int) }}
+        ({{ restaurant.numreviews }} reviews)
         {% else %}
         No reviews yet.
         {% endif %}
@@ -66,7 +67,11 @@
         {% if restaurant.avgreview %}
         {{ '&nbsp;<span class="fa fa-star checked"></span>'|safe * restaurant.avgreview|int }}
         {{ '<span class="fa fa-star"></span>&nbsp;'|safe * (5-restaurant.avgreview|int) }}
+        ({{ restaurant.numreviews }} reviews)
+        {% else %}
+        No reviews yet.
         {% endif %}
+        <br>
         {% if restaurant.distance >= 1000 %}
         {{ "%.1f"|format(restaurant.distance / 1000) }} km away
         {% else %}

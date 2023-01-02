@@ -22,7 +22,7 @@ body {
   position: absolute;
   z-index: 2;
   top: 20%;
-  background-color: white;
+  background-color: #FEFFDE;
   border: 1px solid #ddd;
   border-radius: 15px;
 }
@@ -56,11 +56,18 @@ button {
   display: inline-block;
   padding: 0.8rem 1.4rem;
   font-weight: 700;
-  background-color: black;
+  background-color: #0061A8;
+  border: 2px solid #0061A8;
   color: white;
   border-radius: 5px;
   text-align: center;
   font-size: 1em;
+}
+
+.btn:hover {
+  background-color: #DBF6E9;
+  border: 2px solid #0061A8;
+  color: black;
 }
 
 .btn-open {

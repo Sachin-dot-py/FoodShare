@@ -110,6 +110,11 @@
 </div>
 <br>
 {% endfor %}
+<br><br>
+<center>
+<button type="button" class="button greenhovereffect" onclick="window.open('/cart/view', '_self')">Proceed to Checkout &nbsp;<i class="fa fa-shopping-cart"></i></button>
+</center>
+<br><br><br><br>
 <div id="snackbar"></div>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% if alert %}

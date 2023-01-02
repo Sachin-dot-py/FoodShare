@@ -25,7 +25,7 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   padding: 16px;
   text-align: center;
-  background-color: #f1f1f1;
+  background-color: #CEEDC7;
 }
 /* End Grid cards layout */
 
@@ -116,7 +116,7 @@
 .card {
   padding: 16px;
   text-align: center;
-  background-color: #f1f1f1;
+  background-color: #FFF5E4;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
   width: 40%;
@@ -144,9 +144,9 @@
 }
 
 .greenhovereffect {
-  background-color: #4CAF50;
+  background-color: #91C788;
   color: white;
-  border: 2px solid #4CAF50;
+  border: 2px solid #91C788;
 }
 
 .greenhovereffect:hover {
@@ -234,7 +234,7 @@ body {
 }
 
 .navbar a.active {
-  background-color: #04AA6D;
+  background-color: #66ab8c;
   color: white;
 }
 
@@ -279,15 +279,16 @@ input[type=text]:focus,input[type=email]:focus,input[type=password]:focus,input[
   text-align: center;
 }
 
-.tables tr:nth-child(even){background-color: #f2f2f2;}
+.tables tr:nth-child(even){background-color: #E1FFB1;}
+.tables tr:nth-child(odd){background-color: #FFF5E4;}
 
-.tables tr:hover {background-color: #ddd;}
+.tables tr:hover {background-color: #8FD9A8;}
 
 .tables th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #04AA6D;
+  background-color: #0061A8;
   color: white;
   text-align: center;
 }
@@ -314,7 +315,7 @@ ul.breadcrumb li a {color: green;}
 /* Reviews */
 .reviewbox {
   border: 2px solid #ccc;
-  background-color: #eee;
+  background-color: #FFF5E4;
   border-radius: 5px;
   padding: 16px;
   margin: 16px 0
@@ -349,13 +350,16 @@ ul.breadcrumb li a {color: green;}
     margin: 10px;
     padding: 20px;
     width: 25%;
-    background-color: #f1f1f1;
+    background-color: #CEEDC7;
     text-align: center;
+    border: 2px dashed #9DDFD3;
+    font-size: 20px;
 }
 /* End Buyer Dashboard */
 
 /* Overall Aesthetic (Colors and Font) */
 body {
   font-family: Rockwell, Georgia, Roboto, Arial, sans-serif;
+  background-color: #FFF6BD;
 }
 /* End Overall Aesthetic (Colors and Font) */
