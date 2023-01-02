@@ -220,7 +220,7 @@ updateCart = function (itemid, action) {
             qtyField.value--;
         }
     },
-    failure: function (data) {
+    error: function (data) {
         notify("Error updating cart. Please clear your cart of items from other restaurants before proceeding.");
     }
     }
@@ -237,7 +237,7 @@ function cancelOrder(orderid) {
             let order = document.getElementById(orderid.toString());
             order.outerHTML = ""; // Clear this order from the page
         },
-        failure: function (data) {
+        error: function (data) {
             notify("Error cancelling order.");
         }
     });
@@ -254,7 +254,7 @@ function markOrderReady(orderid) {
             let order = document.getElementById(orderid.toString() + "button");
             order.innerHTML = '<button class="button tablebutton" style="vertical-align:middle" type="button" onclick="markOrderCollected('+orderid.toString()+');"><span>Mark as Collected</span></button>';
         },
-        failure: function (data) {
+        error: function (data) {
             notify("Error while marking order as ready.");
         }
     });
@@ -274,7 +274,7 @@ function markOrderCollected(orderid) {
             fulfilledtable.innerHTML += order.outerHTML;  // Add this order to the fulfilled orders table
             order.outerHTML = ""; // Clear this order from the pending orders table
         },
-        failure: function (data) {
+        error: function (data) {
             notify("Error while marking order as collected.");
         }
     });
@@ -288,7 +288,7 @@ function toggleNewOrders() {
         success: function (data) {
             notify("Order status updated!");
         },
-        failure: function (data) {
+        error: function (data) {
             notify("Error updating order status.");
     }});
 }

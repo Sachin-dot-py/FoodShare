@@ -45,10 +45,10 @@
                 {{ restaurant.avgreview }} stars
                 (<a href="/reviews/view/{{ restaurant.restid }}">{{ restaurant.numreviews }} reviews</a>)
             </span>
-            <br>
             {% else %}
             <span style="font-size: 26px;">No reviews yet</span>
             {% endif %}
+            <br>
             <span style="font-size: 20px;">
 {% if restaurant.distance >= 1000 %}
         {{ "%.1f"|format(restaurant.distance / 1000) }} kilometres away
@@ -59,8 +59,9 @@
             <br>
             <!-- Prefilled email template to contact the restaurant, using mailto -->
             <p>
-                <a href="mailto:{{ (restaurant.userid|fetch_user).email }}?subject=Enquiry%20about%20{{ restaurant.name }}&body=Hi%20there%2C%0D%0A%0D%0AI'm%20emailing%20you%20to%20enquire%20about%20your%20restaurant%20on%20FoodShare.">Contact
-                    the restaurant</a> for any queries.</p>
+                <a href="mailto:{{ (restaurant.userid|fetch_user).email }}?subject=Enquiry%20about%20{{ restaurant.name }}&body=Hi%20there%2C%0D%0A%0D%0AI'm%20emailing%20you%20to%20enquire%20about%20your%20restaurant%20on%20FoodShare.">
+                    Contact the restaurant</a> for any queries.
+            </p>
         </div>
     </div>
     <!-- Google Maps Embed -->
