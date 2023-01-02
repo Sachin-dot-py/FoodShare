@@ -172,6 +172,7 @@ def reset_password(reset_id: int):
         message = RESET_PASSWORD_NOTIFICATION.format(fname=user['fname'], SUPPORT_EMAIL=SUPPORT_EMAIL)
         send_email("Your password has been reset", message, COMMS_EMAIL, [user['email']])
         session['email'] = user['email']  # Sign the user in
+        session['userid'] = user['userid']
         return redirect(url_for("buyer_dashboard", alert="Your password has been successfully changed."))
 
 
@@ -246,7 +247,7 @@ def view_restaurant(restid: int):
     api = ORS()
     restaurant_coords = (restaurant['longitude'], restaurant['latitude'])
     user_coords = (user['longitude'], user['latitude'])
-    restaurant['distance'] = api.distance_between(restaurant_coords, user_coords)
+    restaurant['distance'] = api.distance_between(user_coords, restaurant_coords)
     restaurant['menu'] = [restaurant['menu'][x:x + 4] for x in
                           range(0, len(restaurant['menu']), 4)]  # Split into groups of 4
     cart = CartDB().fetch_cart(session['userid'])

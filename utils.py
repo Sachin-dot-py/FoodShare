@@ -1,12 +1,28 @@
 # System imports:
 import os
 import hashlib
+from functools import wraps
 
 # Third-party imports:
 import requests
 
 # Local imports:
 from secret_config import MAILGUN_API_KEY, MAILGUN_DOMAIN_NAME, ORS_API_KEY
+
+
+def cache_data(func):
+    cached = {}
+
+    @wraps(func)
+    def decorator(*args):
+        # args[1:] is being used to exclude the first argument, 'self, which stores the object instance.
+        if args[1:] not in cached:
+            cached[args[1:]] = func(*args)
+            if len(cached) >= 256:  # If the cache is full, delete the oldest item to prevent memory overflow
+                cached.pop(next(iter(cached)))
+        return cached[args[1:]]
+
+    return decorator
 
 
 def hash_password(password: str, salt: bytes = None) -> tuple[bytes, bytes]:
@@ -85,6 +101,7 @@ class ORS:
         # Returns only the coordinates
         return result['features'][0]['geometry']['coordinates']
 
+    @cache_data
     def distance_between(self, coord1: tuple[float, float], coord2: tuple[float, float]) -> float:
         """ Get the distance between two coordinates in metres as an integer"""
         result = self._perform_post_request(

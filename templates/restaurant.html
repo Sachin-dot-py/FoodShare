@@ -41,7 +41,10 @@
             restaurant.avgreview|round|int }}
             {{ '<span class="fa fa-star" style="font-size: 26px;"></span>&nbsp;'|safe *
             (5-restaurant.avgreview|round|int) }}
-            <span style="font-size: 26px;">{{ restaurant.avgreview }} stars ({{ restaurant.numreviews }} reviews)</span>
+            <span style="font-size: 26px;">
+                {{ restaurant.avgreview }} stars
+                (<a href="/reviews/view/{{ restaurant.restid }}">{{ restaurant.numreviews }} reviews</a>)
+            </span>
             <br>
             {% else %}
             <span style="font-size: 26px;">No reviews yet</span>
