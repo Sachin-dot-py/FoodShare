@@ -156,8 +156,9 @@ def reset_password(reset_id: int):
     if request.method == "GET":  # User opening the webpage from the email link
         db = UserDB()
         user = db.lookup_reset_id(reset_id)
-        if not user:  # Invalid URL
-            abort(400)
+        if not user:  # Invalid URL or already used reset ID
+            error = "We're sorry, but your reset link is invalid. Please generate a new one below to continue."
+            return render_template("change_reset_password.html", stage=1, error=error)  # Redirect back to first stage
         if user['reset_expiry'] < time.time():  # Reset ID has expired
             db.delete_reset_id(reset_id)
             error = "We're sorry, but your reset link has expired. Please generate a new one below to continue."

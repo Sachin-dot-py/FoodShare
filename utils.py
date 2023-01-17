@@ -1,13 +1,17 @@
 # System imports:
 import os
 import hashlib
+import smtplib
+import ssl
 from functools import wraps
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # Third-party imports:
 import requests
 
 # Local imports:
-from secret_config import MAILGUN_API_KEY, MAILGUN_DOMAIN_NAME, ORS_API_KEY
+from secret_config import ORS_API_KEY, EMAIL_ADDRESS, EMAIL_PASSWORD
 
 
 def cache_data(func):
@@ -37,16 +41,18 @@ def hash_password(password: str, salt: bytes = None) -> tuple[bytes, bytes]:
     return hashed, salt
 
 
-def send_email(subject: str, content: str, sender: str, receivers: list[str]) -> requests.Response:
-    """ Sends an email using the MailGun API """
-    return requests.post(
-        f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN_NAME}/messages",
-        auth=("api", MAILGUN_API_KEY),
-        data={"from": sender,
-              "to": receivers,
-              "subject": subject,
-              "html": content}
-    )
+def send_email(subject: str, content: str, sender: str, receivers: list[str]) -> None:
+    """ Sends an email from the FoodShare email account """
+    message = MIMEMultipart("alternative")
+    message["Subject"] = subject
+    message["From"] = sender
+    message["To"] = ",".join(receivers)
+    message.attach(MIMEText(content, "html"))
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        server.sendmail(sender, ",".join(receivers), message.as_string())
 
 
 class ORS:
