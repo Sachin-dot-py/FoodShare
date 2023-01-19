@@ -59,7 +59,9 @@
         &nbsp; <span>{{ review.title }}</span>
         <p>{{ review.description }}</p>
         <p><i>{{ (review.userid|fetch_user).fname }} {{( review.userid|fetch_user).lname }}</i> on <i>{{ review.submittedat|format_date }}</i></p>
+        {% if is_owner %}
         <p><a href="/orders/invoice/{{ review.orderid }}" target="_blank">View this order.</a></p>
+        {% endif %}
     </div>
     {% endfor %}
 </div>
