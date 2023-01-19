@@ -114,6 +114,13 @@
 </div>
 <br>
 {% endfor %}
+{% if restaurant.menu|length == 0 %}
+<center>
+    <div class="card">
+        <h1 style="text-align: center;">This restaurant has no menu items yet.</h1>
+    </div>
+</center>
+{% endif %}
 <br><br>
 <center>
 <button type="button" class="button greenhovereffect" onclick="window.open('/cart/view', '_self')">Proceed to Checkout &nbsp;<i class="fa fa-shopping-cart"></i></button>

@@ -91,7 +91,8 @@ def login_page():
     if session.get('email', None):  # If user is already logged in
         return redirect(url_for("buyer_dashboard"))
 
-    return render_template('login.html', error=error, alert=request.args.get('alert', None), next=request.form.get('next', ''))
+    return render_template('login.html', error=error, alert=request.args.get('alert', None),
+                           next=request.form.get('next', ''))
 
 
 @app.route('/sign_up', methods=["GET", "POST"])
@@ -209,7 +210,8 @@ def contact_us():
                                              nature=request.form['nature'])
         send_email(f"New {request.form['nature'].lower()} from FoodShare", message, COMMS_EMAIL, [SUPPORT_EMAIL])
 
-        return render_template("contact_us.html", signed_in=bool(session.get('email')), alert="Your message has been sent. We will get back to you shortly.")
+        return render_template("contact_us.html", signed_in=bool(session.get('email')),
+                               alert="Your message has been sent. We will get back to you shortly.")
 
 
 @app.route('/autocomplete/address', methods=['GET'])
@@ -287,7 +289,8 @@ def view_cart():
             details['total'] = round(details['quantity'] * details['price'], 2)
             items.append(details)
         total = sum(item['total'] for item in items)
-        return render_template("cart.html", cart=items, total=total, restaurant=restaurant, alert=request.args.get('alert'))
+        return render_template("cart.html", cart=items, total=total, restaurant=restaurant,
+                               alert=request.args.get('alert'))
     else:
         return render_template("cart.html", cart=[])
 
@@ -302,7 +305,8 @@ def submit_cart():
         restaurant = rdb.view_restaurant(restid=cart[0]['restid'])
 
         if not restaurant['open']:  # If the restaurant is not accepting new orders
-            return redirect(url_for('view_cart', alert="Your order was not sent, as the restaurant is currently not accepting new orders. Please try again later."))
+            return redirect(url_for('view_cart',
+                                    alert="Your order was not sent, as the restaurant is currently not accepting new orders. Please try again later."))
 
         fdb = FoodItemsDB()
         items = []
@@ -491,7 +495,8 @@ def buyer_orders():
         order['restaurant'] = rdb.get_restaurant(restid=order['restid'])
         order['date'] = datetime.fromtimestamp(order['ordertime']).strftime("%d %b %Y")
         order['time'] = datetime.fromtimestamp(order['ordertime']).strftime("%I:%M %p")
-        order['review'] = reviews.get(order['orderid'], None)  # If the user has not reviewed the order, the value is None
+        order['review'] = reviews.get(order['orderid'],
+                                      None)  # If the user has not reviewed the order, the value is None
     return render_template("buyer_orders.html", orders=orders)
 
 
@@ -538,7 +543,8 @@ def edit_restaurant():
     else:
         api = ORS()
         coordinates = api.get_coordinates(request.form['address'])
-        restaurant = {'name': request.form['name'], 'address': request.form['address'], 'longitude': coordinates[0], 'latitude': coordinates[1]}
+        restaurant = {'name': request.form['name'], 'address': request.form['address'], 'longitude': coordinates[0],
+                      'latitude': coordinates[1]}
 
         file = request.files.get('coverpic')
         if file:
@@ -618,8 +624,7 @@ def edit_food_item():
         else:
             coverpic = "defaultitem.png"
         item['picture'] = coverpic
-    if fdb.get_item(int(request.form['itemid']))['restid'] == restaurant[
-        'restid']:  # Validate that item is actually owned by this user.
+    if fdb.get_item(int(request.form['itemid']))['restid'] == restaurant['restid']:  # Validate that item is actually owned by this user.
         fdb.edit_item(int(request.form['itemid']), **item)
     return redirect(url_for("edit_restaurant", alert=f"Successfully edited {request.form['name']} on your food list"),
                     code=303)  # 303 forces the POST into a GET request
@@ -631,11 +636,11 @@ def delete_food_item():
     rdb = RestaurantsDB()
     restaurant = rdb.get_restaurant(userid=session['userid'])
     fdb = FoodItemsDB()
-    if fdb.get_item(int(request.form['itemid']))['restid'] == restaurant[
-        'restid']:  # Validate that item is actually owned by this user.
+    if fdb.get_item(int(request.form['itemid']))['restid'] == restaurant['restid']:  # Validate that item is actually owned by this user.
         fdb.remove_item(int(request.form['itemid']))
-    return redirect(url_for("edit_restaurant", alert=f"Successfully deleted {request.form['name']} from your food list"),
-                    code=303)  # 303 forces the POST into a GET request
+    return redirect(
+        url_for("edit_restaurant", alert=f"Successfully deleted {request.form['name']} from your food list"),
+        code=303)  # 303 forces the POST into a GET request
 
 
 # Allows users to view the image files uploaded here
