@@ -238,6 +238,7 @@ def buyer_dashboard():
         restaurant_coords = (restaurant['longitude'], restaurant['latitude'])
         distance = api.distance_between(user_coords, restaurant_coords)
         restaurant['distance'] = distance
+    restaurants = sorted(restaurants, key=lambda restaurant: restaurant['distance'])  # Sort restaurants by distance
     return render_template("buyer_dashboard.html", restaurants=restaurants, alert=request.args.get('alert', None))
 
 
