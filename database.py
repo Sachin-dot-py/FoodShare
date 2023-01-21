@@ -23,6 +23,8 @@ class MySQL:
             password=MYSQL_DB_PASSWORD
         )
         self.cur = self.db.cursor(dictionary=True)
+        with open("setup_db.sql", "r") as f:
+            self.cur.execute(f.read(), multi=True)  # Create database and tables during first run
         self.cur.execute("USE foodshare")
 
     def _insert(self, table_name: str, data: dict[str, Union[str, int, float, bool]]) -> int:

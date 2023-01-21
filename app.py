@@ -172,7 +172,7 @@ def reset_password(reset_id: int):
         db.edit_user(user['email'], unhashed_password=request.form['password'])  # Change the password
         db.delete_reset_id(reset_id)
         message = RESET_PASSWORD_NOTIFICATION.format(fname=user['fname'], SUPPORT_EMAIL=SUPPORT_EMAIL)
-        send_email("Your password has been reset", message, COMMS_EMAIL, [user['email']])
+        send_email("Your password has been reset", message, COMMS_EMAIL, [user['email']])  # Notify the user by email
         session['email'] = user['email']  # Sign the user in
         session['userid'] = user['userid']
         return redirect(url_for("buyer_dashboard", alert="Your password has been successfully changed."))
@@ -188,7 +188,7 @@ def change_password():
         user = db.get_user(session['email'])
         db.edit_user(user['email'], unhashed_password=request.form['password'])
         message = CHANGE_PASS_NOTIF.format(fname=user['fname'], SUPPORT_EMAIL=SUPPORT_EMAIL)
-        send_email("Your password has been changed", message, COMMS_EMAIL, [user['email']])
+        send_email("Your password has been changed", message, COMMS_EMAIL, [user['email']])  # Notify the user by email
         return redirect(url_for("change_password", alert="Your password has been changed."), code=303)
 
 
@@ -216,8 +216,8 @@ def contact_us():
 
 @app.route('/autocomplete/address', methods=['GET'])
 def address_autocomplete():
-    # Check if the request is valid (i.e. the address parameter has been provided
-    if address := request.args.get("address", None):
+    # Provides autocomplete details to the frontend
+    if address := request.args.get("address", None):  # Check if the request is valid
         api = ORS()
         return jsonify(api.autocomplete_coordinates(address))
     else:
@@ -234,6 +234,7 @@ def buyer_dashboard():
     api = ORS()
     user_coords = (user['longitude'], user['latitude'])
     for restaurant in restaurants:
+        #  Calculate distance between user and restaurant
         restaurant_coords = (restaurant['longitude'], restaurant['latitude'])
         distance = api.distance_between(user_coords, restaurant_coords)
         restaurant['distance'] = distance
@@ -263,9 +264,9 @@ def view_restaurant(restid: int):
 def update_cart():
     cdb = CartDB()
     try:
-        if request.form['action'] == 'increment':
+        if request.form['action'] == 'increment':  # User clicked the "+" button
             cdb.increment_item(session['userid'], int(request.form['itemid']))
-        elif request.form['action'] == 'decrement':
+        elif request.form['action'] == 'decrement':  # User clicked the "-" button
             cdb.decrement_item(session['userid'], int(request.form['itemid']))
     except ValueError:
         abort(400)  # Signal to frontend that the request was invalid.
@@ -298,7 +299,7 @@ def view_cart():
 @app.route("/cart/submit", methods=['POST'])
 @login_required
 def submit_cart():
-    if request.form['action'] == 'checkout':
+    if request.form['action'] == 'checkout':  # User clicked the "Checkout" button
         cdb = CartDB()
         cart = cdb.fetch_cart(session['userid'])
         rdb = RestaurantsDB()
@@ -329,16 +330,15 @@ def submit_cart():
 
         buyer_message = ORDER_CONFIRM_BUYER.format(orderid=orderid, fname=buyer['fname'],
                                                    link=url_for('buyer_orders', _external=True))
-        send_email(f"Order Confirmation #{orderid}", buyer_message, COMMS_EMAIL, [session['email']])
+        send_email(f"Order Confirmation #{orderid} at {restaurant['name']}", buyer_message, COMMS_EMAIL, [session['email']])
 
         seller_message = ORDER_CONFIRM_SELLER.format(orderid=orderid, fname=seller['fname'],
                                                      link=url_for('seller_dashboard', _external=True),
-                                                     buyer=buyer['fname'], amount=amount)
-        send_email(f"New Order #{orderid}", seller_message, COMMS_EMAIL, [seller['email']])
+                                                     buyer=buyer['fname'], amount=round(amount, 2))
+        send_email(f"New Order #{orderid} by {buyer['fname']} {buyer['lname']}", seller_message, COMMS_EMAIL, [seller['email']])
 
-        return redirect(
-            url_for('buyer_orders', alert=f"Your order at {restaurant['name']} for ${amount} has been placed!"))
-    elif request.form['action'] == 'clear':
+        return redirect(url_for('buyer_orders', alert=f"Your order at {restaurant['name']} for ${amount} has been placed!"))
+    elif request.form['action'] == 'clear':  # User clicked "Clear Cart"
         cdb = CartDB()
         cdb.clear_cart(session['userid'])
         return redirect(url_for('buyer_dashboard', alert="Your cart has been cleared."))
@@ -355,7 +355,7 @@ def setup_restaurant():
             return render_template("setup_restaurant.html", allowed_extensions=", ".join(ALLOWED_FILE_EXTENSIONS))
     else:  # Submitting the form
         file = request.files['coverpic']
-        if not file.filename.lower().endswith(ALLOWED_FILE_EXTENSIONS):
+        if not file.filename.lower().endswith(ALLOWED_FILE_EXTENSIONS):  # Check if file is of a permitted format
             return render_template("setup_restaurant.html", allowed_extensions=", ".join(ALLOWED_FILE_EXTENSIONS)
                                    , error="Invalid file extension. Please upload only image files.")
         extension = "." + file.filename.split(".")[-1]
@@ -396,7 +396,7 @@ def seller_dashboard():
 @login_required
 def toggle_orders():
     rdb = RestaurantsDB()
-    rdb.edit_restaurant(session['userid'], **{"open": request.form['toggle'] == 'true'})
+    rdb.edit_restaurant(session['userid'], **{"open": request.form['toggle'] == 'true'})  # Toggle "Accept Orders" status
     return 'Successful', 200
 
 
@@ -411,11 +411,11 @@ def mark_order_ready():
     udb = UserDB()
     buyer = udb.get_user(userid=order['userid'])
     if order['restid'] == restaurant['restid']:
-        odb.mark_ready(orderid)
+        odb.mark_ready(orderid)  # Marks the order as ready in the database
         send_email(f"Order #{orderid} is ready for pickup",
                    ORDER_READY_FOR_COLLECTION.format(orderid=orderid, fname=buyer['fname'],
                                                      restaurant=restaurant['name'], address=restaurant['address']),
-                   COMMS_EMAIL, [buyer['email']])
+                   COMMS_EMAIL, [buyer['email']])  # Inform user that order is ready for pickup
         return 'Successful', 200
     else:
         return 'Unauthorized', 401
@@ -430,7 +430,7 @@ def mark_order_collected():
     odb = OrdersDB()
     order = odb.fetch_order(orderid)
     if order['restid'] == restaurant['restid']:
-        odb.mark_collected(orderid)
+        odb.mark_collected(orderid)  # Mark the order as collected in the database
         return 'Successful', 200
     else:
         return 'Unauthorized', 401
@@ -473,8 +473,8 @@ def generate_invoice(orderid: int):
     restaurant = rdb.get_restaurant(restid=order['restid'])
     udb = UserDB()
     user = udb.get_user(userid=order['userid'])
-    if restaurant['userid'] == session['userid'] or user['userid'] == session[
-        'userid']:  # Logged in user is either buyer or restaurant
+    # Check if the user logged-in is either the buyer or seller
+    if restaurant['userid'] == session['userid'] or user['userid'] == session['userid']:
         order['date'] = datetime.fromtimestamp(order['ordertime']).strftime("%d %b %Y")
         order['time'] = datetime.fromtimestamp(order['ordertime']).strftime("%I:%M %p")
         return render_template("invoice.html", order=order, restaurant=restaurant, buyer=user)
@@ -495,8 +495,7 @@ def buyer_orders():
         order['restaurant'] = rdb.get_restaurant(restid=order['restid'])
         order['date'] = datetime.fromtimestamp(order['ordertime']).strftime("%d %b %Y")
         order['time'] = datetime.fromtimestamp(order['ordertime']).strftime("%I:%M %p")
-        order['review'] = reviews.get(order['orderid'],
-                                      None)  # If the user has not reviewed the order, the value is None
+        order['review'] = reviews.get(order['orderid'], None)  # "None" if the user has not reviewed the order yet.
     return render_template("buyer_orders.html", orders=orders)
 
 
@@ -532,7 +531,7 @@ def view_reviews(restid: int):
 @app.route("/restaurant/edit", methods=['GET', 'POST'])
 @login_required
 def edit_restaurant():
-    if request.method == 'GET':
+    if request.method == 'GET':  # User is opening the webpage
         rdb = RestaurantsDB()
         if restaurant := rdb.get_restaurant(userid=session['userid']):  # User has set up their restaurant
             fooditems = FoodItemsDB().fetch_items(restaurant['restid'])
@@ -540,7 +539,7 @@ def edit_restaurant():
                                    alert=request.args.get('alert'))
         else:
             return redirect(url_for("setup_restaurant"))
-    else:
+    else:  # User has submitted the form
         api = ORS()
         coordinates = api.get_coordinates(request.form['address'])
         restaurant = {'name': request.form['name'], 'address': request.form['address'], 'longitude': coordinates[0],
@@ -683,4 +682,4 @@ def favicon():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

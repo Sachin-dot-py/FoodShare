@@ -4,7 +4,7 @@ ALLOWED_FILE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
 EMAIL_REGEX = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'  # Regex for email validation
 UPLOADS_FOLDER = "uploads"
 
-COMMS_EMAIL = "no-reply@FoodShare.xyz"
+COMMS_EMAIL = "FoodShare31@gmail.com"
 SUPPORT_EMAIL = "FoodShare31@gmail.com"
 
 WELCOME_TEMPLATE = """
@@ -77,9 +77,9 @@ Hi {fname},
 This is to notify you that you have a new order <b>#{orderid}</b>.
 <br><br>
 <h2>Order Details</h2>
-<table>
+<table border=1>
 <tr><td>Buyer</td><td>{buyer}</td></tr>
-<tr><td>Amount</td><td>{amount}</td></tr>
+<tr><td>Amount</td><td>${amount}</td></tr>
 </table>
 <br><br>
 You can view the order details and update its status <a href="{link}">here</a>.
