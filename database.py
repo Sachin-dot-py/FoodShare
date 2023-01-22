@@ -15,7 +15,7 @@ from config import UPLOADS_FOLDER
 
 
 class MySQL:
-    """ Used to provide an interface with the MySQL Database through Inheritance """
+    """ Superclass used to provide an interface with the MySQL Database through Inheritance """
     def __init__(self):
         self.db = mysql.connector.connect(
             host="localhost",
@@ -62,6 +62,7 @@ class MySQL:
         fields_query = ", ".join(fields)
         if where:
             where_query = " AND ".join([f"{key} = %s" for key in where.keys()])
+            # Values are passed separately below to prevent SQL injection as they are user inputs.
             self.cur.execute(f"SELECT {fields_query} FROM {table_name} WHERE {where_query}", list(where.values()))
         else:
             self.cur.execute(f"SELECT {fields_query} FROM {table_name}")
@@ -80,6 +81,7 @@ class MySQL:
         """
         data_query = ", ".join([f"{key} = %s" for key in data.keys()])
         where_query = " AND ".join([f"{key} = %s" for key in where.keys()])
+        # Values are passed separately below to prevent SQL injection as they are user inputs.
         self.cur.execute(f"UPDATE {table_name} SET {data_query} WHERE {where_query}", list(data.values()) + list(where.values()))
         self.db.commit()
 
@@ -91,6 +93,7 @@ class MySQL:
             where: The fields and values that are being selected as a dictionary.
         """
         where_query = " AND ".join([f"{key} = %s" for key in where.keys()])
+        # Values are passed separately below to prevent SQL injection as they are user inputs.
         self.cur.execute(f"DELETE FROM {table_name} WHERE {where_query}", list(where.values()))
         self.db.commit()
 

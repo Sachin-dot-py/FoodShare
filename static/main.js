@@ -158,8 +158,8 @@ function addSuggestion(suggestion){
     const ul = autocomplete_box.getElementsByTagName('ul')[0];
     const li = document.createElement('li');
     li.onclick = function() {
-    setAddress(this.innerHTML); // When the suggestion is clicked, set the address field as the suggestion
-    ul.innerHTML = "" // Remove suggestions from screen
+        setAddress(this.innerHTML); // When the suggestion is clicked, set the address field as the suggestion
+        ul.innerHTML = "" // Remove suggestions from screen
     };
     li.innerHTML = suggestion;
     ul.appendChild(li);
@@ -238,7 +238,7 @@ function cancelOrder(orderid) {
             order.outerHTML = ""; // Clear this order from the page
         },
         error: function (data) {
-            notify("Error cancelling order.");
+            notify("Error while cancelling order.");
         }
     });
 }

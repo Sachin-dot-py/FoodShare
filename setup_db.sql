@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `fooditems` (
   `restrictions` varchar(100) DEFAULT NULL,
   `picture` varchar(110) NOT NULL DEFAULT 'defaultitem.png'
 );
+
 CREATE TABLE IF NOT EXISTS `orders` (
   `orderid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `ordertime` bigint(20) NOT NULL,
